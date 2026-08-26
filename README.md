@@ -1,10 +1,34 @@
 # SDLC Pack Comparison: OpenAI vs. Claude
+_Review date: August 26, 2026_
+
 
 ## 100% AI Generated
 - OpenAI Gpt 5.6 Sol: Runtime 5.3 hours
-- Anthropic: Fable 5: Runtime 3.5 hours 
+- Anthropic Fable 5: Runtime 3.5 hours 
 
-_Review date: August 26, 2026_
+| Original folder name           | Canonical GitHub URL                                                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| `hve-core-main`                | [https://github.com/microsoft/hve-core](https://github.com/microsoft/hve-core) ([GitHub][1])                                    |
+| `KiroCrew-main`                | [https://github.com/kirodotdev/KiroCrew](https://github.com/kirodotdev/KiroCrew) ([GitHub][2])                                  |
+| `PyRIT-main`                   | [https://github.com/microsoft/PyRIT](https://github.com/microsoft/PyRIT) ([GitHub][3])                                          |
+| `RAMPART-main`                 | [https://github.com/microsoft/RAMPART](https://github.com/microsoft/RAMPART) ([GitHub][4])                                      |
+| `spec-kit-main`                | [https://github.com/github/spec-kit](https://github.com/github/spec-kit) ([GitHub][5])                                          |
+| `superpowers-main`             | [https://github.com/obra/Superpowers](https://github.com/obra/Superpowers) ([GitHub][6])                                        |
+| `gsd-core-next`                | [https://github.com/open-gsd/gsd-core](https://github.com/open-gsd/gsd-core) ([GitHub][7])                                      |
+| `BMAD-METHOD-main`             | [https://github.com/bmad-code-org/BMAD-METHOD](https://github.com/bmad-code-org/BMAD-METHOD) ([GitHub][8])                      |
+| `OpenSpec-main`                | [https://github.com/Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec) ([GitHub][9])                                  |
+| `sample-aidlc-kiro-power-main` | [https://github.com/aws-samples/sample-aidlc-kiro-power](https://github.com/aws-samples/sample-aidlc-kiro-power) ([GitHub][10]) |
+
+[1]: https://github.com/microsoft/hve-core/blob/main/README.md?utm_source=chatgpt.com "hve-core/README.md at main · microsoft/hve-core · GitHub"
+[2]: https://github.com/kirodotdev/KiroCrew?utm_source=chatgpt.com "GitHub - kirodotdev/KiroCrew: A persistent workspace for development work that self-improves and continues beyond one session. · GitHub"
+[3]: https://github.com/microsoft/pyrit?utm_source=chatgpt.com "GitHub - microsoft/PyRIT: The Python Risk Identification Tool for generative AI (PyRIT) is an open source framework built to empower security professionals and engineers to proactively identify risks in generative AI systems. · GitHub"
+[4]: https://github.com/microsoft/RAMPART?utm_source=chatgpt.com "GitHub - microsoft/RAMPART: A pytest-native safety and security testing framework for agentic AI applications · GitHub"
+[5]: https://github.com/github/spec-kit?utm_source=chatgpt.com "GitHub - github/spec-kit: 💫 Toolkit to help you get started with Spec-Driven Development · GitHub"
+[6]: https://github.com/obra/Superpowers?utm_source=chatgpt.com "GitHub - obra/superpowers: An agentic skills framework & software development methodology that works. · GitHub"
+[7]: https://github.com/open-gsd/gsd-core/blob/next/VERSIONING.md?utm_source=chatgpt.com "gsd-core/VERSIONING.md at next · open-gsd/gsd-core · GitHub"
+[8]: https://github.com/bmad-code-org?utm_source=chatgpt.com "BMad Code Org · GitHub"
+[9]: https://github.com/Fission-AI/openspec?utm_source=chatgpt.com "GitHub - Fission-AI/OpenSpec: Spec-driven development (SDD) for AI coding assistants. · GitHub"
+[10]: https://github.com/aws-samples/sample-aidlc-kiro-power?utm_source=chatgpt.com "GitHub - aws-samples/sample-aidlc-kiro-power · GitHub"
 
 ## Executive conclusion
 
