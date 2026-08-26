@@ -1,0 +1,12 @@
+# Lint configuration of the support-assistant project. `run.sh` turns `ruff check --output-format
+# sarif assistant` into the SAST artifact that `aisdlc ci collect-security` consumes.
+line-length = 100
+target-version = "py311"
+
+[lint]
+select = ["E4", "E7", "E9", "F", "B", "S", "UP", "TRY004"]
+
+[lint.per-file-ignores]
+# Tests drive subprocesses, use assert and seeded randomness on purpose.
+"tests/*" = ["S101", "S106", "S311", "S603"]
+"before/tests/*" = ["S101", "S106", "S311", "S603"]

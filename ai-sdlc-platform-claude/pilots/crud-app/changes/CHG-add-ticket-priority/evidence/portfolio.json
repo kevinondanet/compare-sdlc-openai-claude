@@ -1,0 +1,171 @@
+{
+  "evaluated_at": "2026-08-26T06:10:41.631900Z",
+  "inputs": {
+    "critical_module_coverage": {},
+    "exceptions": [],
+    "runs": [
+      {
+        "complete": true,
+        "evidence_ids": [
+          "EVD-tests-012"
+        ],
+        "executed": true,
+        "failed": 0,
+        "layer": "e2e",
+        "metrics": {
+          "acceptance_criteria_with_evidence": 100.0,
+          "critical_journeys_e2e": 100.0
+        },
+        "notes": [
+          "8/8 scenarios traced to tests"
+        ],
+        "passed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "kind": "portfolio",
+  "report": {
+    "breaches": [],
+    "evaluated_at": "2026-08-26T06:10:41.631801Z",
+    "exceptions_applied": [],
+    "exceptions_expired": [],
+    "layers": [
+      {
+        "evidence_ids": [
+          "EVD-tests-005",
+          "EVD-tests-006",
+          "EVD-tests-007",
+          "EVD-tests-008",
+          "EVD-tests-009"
+        ],
+        "failed": 0,
+        "layer": "unit",
+        "passed": 4,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [],
+        "failed": 0,
+        "layer": "property",
+        "passed": 0,
+        "reasons": [],
+        "required": false,
+        "skipped": 0,
+        "status": "not_required"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-010"
+        ],
+        "failed": 0,
+        "layer": "integration",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-011"
+        ],
+        "failed": 0,
+        "layer": "contract",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-012",
+          "EVD-tests-012"
+        ],
+        "failed": 0,
+        "layer": "e2e",
+        "passed": 0,
+        "reasons": [
+          "8/8 scenarios traced to tests"
+        ],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-013"
+        ],
+        "failed": 0,
+        "layer": "architecture",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-security-001"
+        ],
+        "failed": 0,
+        "layer": "security",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [],
+        "failed": 0,
+        "layer": "agent_safety",
+        "passed": 0,
+        "reasons": [],
+        "required": false,
+        "skipped": 0,
+        "status": "not_required"
+      },
+      {
+        "evidence_ids": [],
+        "failed": 0,
+        "layer": "prompt_evals",
+        "passed": 0,
+        "reasons": [],
+        "required": false,
+        "skipped": 0,
+        "status": "not_required"
+      },
+      {
+        "evidence_ids": [],
+        "failed": 0,
+        "layer": "performance",
+        "passed": 0,
+        "reasons": [],
+        "required": false,
+        "skipped": 0,
+        "status": "not_required"
+      }
+    ],
+    "missing_layers": [],
+    "risk_class": "standard",
+    "thresholds": {
+      "acceptance_criteria_with_evidence": 100.0,
+      "agent_safety_scenarios_executed": 100.0,
+      "branches": 70.0,
+      "critical_journeys_e2e": 100.0,
+      "critical_modules": 90.0,
+      "diff_lines": 90.0,
+      "fail_on_incomplete": true,
+      "lines": 78.0,
+      "lines_floor": 75.0,
+      "mutation_score": 0.6,
+      "require_diff_coverage": true
+    }
+  },
+  "risk_class": "standard"
+}

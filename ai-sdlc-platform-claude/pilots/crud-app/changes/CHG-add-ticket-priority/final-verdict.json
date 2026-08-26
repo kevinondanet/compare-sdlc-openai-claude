@@ -1,0 +1,96 @@
+{
+  "bundle_digest": "162802cc45c9841886de6aad842f191191c32017e1ddcf53a84e6ca11f450ceb",
+  "change_id": "CHG-add-ticket-priority",
+  "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+  "fingerprint": "bc9e8c91253c5561286e6d877026071ed9fe391844a3e8346977e02a7ab49123",
+  "gate_results": [
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-reviews-005"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-reviews-005",
+        "EVD-security-001",
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:10:41.798803Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:10:41.851888Z",
+      "signer": "aisdlc",
+      "value": "002ea062df60a9e46317cb348988e01cb48e80cd09bf5de14c18842d3fcb1020"
+    }
+  ]
+}

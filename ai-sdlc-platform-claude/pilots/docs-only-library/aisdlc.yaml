@@ -1,0 +1,13 @@
+# Pilot 1 — documentation-only change to a small Python library.
+name: shapes-docs
+languages: [python]
+architecture_style: library
+risk_classification:
+  default: docs_only
+  rules:
+    - {pattern: "shapes/*", risk_class: low}
+test_commands:
+  unit: python3 -m unittest discover -s tests -q
+  lint: null
+  types: null
+overrides: {}

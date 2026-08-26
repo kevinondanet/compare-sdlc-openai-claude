@@ -1,0 +1,28 @@
+# AI-SDLC project configuration (aisdlc.policy.project_config.ProjectConfig).
+# Organization policy: ./org-policy.yaml (discovered automatically; see aisdlc.policy.ORG_POLICY_CANDIDATES).
+# `overrides` may only tighten organization values (narrow-only merge).
+name: --help
+languages:
+- python
+frameworks: []
+architecture_style: modular_monolith
+risk_classification:
+  default: standard
+  rules: []
+test_commands:
+  unit: pytest -q
+  lint: ruff check .
+  types: mypy
+  build: null
+  integration: null
+  e2e: null
+  coverage: null
+  mutation: null
+critical_modules: []
+overrides:
+  gates: null
+  models: null
+  tool_tiers: null
+  cost_limits: null
+  security_baselines: null
+  evidence_standards: null

@@ -1,0 +1,20 @@
+# Round 1 answers to `aisdlc intake clarify CHG-lunch-order-form --limit 30` (ids are the
+# ranked question ids the command prints). Written by the office manager with the
+# solution architect.
+CQ-001: CSV
+CQ-002: CSV
+CQ-003: CSV
+CQ-004: Sam Ortiz, office manager (office-manager@example.com)
+CQ-005: >-
+  Lunch-related emails to the office manager drop from 20 to under 5 per week, measured
+  two months after launch
+CQ-006: "None known: no deadline, no budget, standard-library Python only"
+CQ-007: "None: the caterer receives the CSV export by email; no system integration"
+CQ-008: in under one minute
+CQ-009: all
+CQ-010: in under one minute
+CQ-011: all
+CQ-012: in under one minute
+CQ-013: all
+CQ-014: The system SHALL list and export 500 orders within 1 second
+CQ-015: Standard-library Python only; the Friday 10:00 cut-off is fixed; the caterer menu has at most 10 dishes

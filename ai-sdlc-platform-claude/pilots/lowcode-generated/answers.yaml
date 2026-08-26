@@ -1,0 +1,28 @@
+# Discovery answers written by the office manager (no technical background).
+# Deliberately sparse: vague words ("quickly", "some"), a "TBD", an unmeasurable success
+# measure and no accountable owner. `aisdlc intake discover --answers answers.yaml`
+# turns this into a change package; the clarification loop then fixes what G0 blocks on.
+title: Lunch order form
+problem: >-
+  Every Friday someone walks around with a paper sheet collecting lunch orders and then
+  retypes them into an email for the caterer.
+users:
+  - "Team member: order my lunch without hunting for the paper sheet"
+  - "Office manager: see every order in one table and send it to the caterer"
+current_pain: >-
+  Orders get lost, quantities are misread and the office manager retypes 40 orders
+  every week.
+desired_outcome:
+  - Team members can submit a lunch order in a form quickly
+  - The office manager can see some orders in a table
+  - The office manager can export the table as TBD
+out_of_scope:
+  - Payments and expense claims
+  - Menu management by the caterer
+must_not_do:
+  - Accept an order after the Friday cut-off
+success_measure: Fewer lunch-related emails
+constraints: []
+data_sensitivity: No personal data - dish names, quantities and team names only
+integrations: []
+owner: ""

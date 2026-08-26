@@ -1,0 +1,6 @@
+[
+  {"timestamp": "2024-06-01T00:00:01Z", "agentId": "claude-code:abc", "action": "prompt.submit", "decision": "allow", "previousHash": "", "hash": "h1"},
+  {"timestamp": "2024-06-01T00:00:02Z", "agentId": "claude-code:abc", "action": "tool.Read", "decision": "allow", "previousHash": "h1", "hash": "h2"},
+  {"timestamp": "2024-06-01T00:00:03Z", "agentId": "claude-code:abc", "action": "tool.Bash", "decision": "deny", "previousHash": "h2", "hash": "h3"},
+  {"timestamp": "2024-06-01T00:00:04Z", "agentId": "claude-code:abc", "action": "tool.Write", "decision": "allow", "previousHash": "h3", "hash": "h4"}
+]

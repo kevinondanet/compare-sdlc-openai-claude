@@ -1,0 +1,12 @@
+memory_db_type: in_memory
+
+initializers:
+  - name: target
+    args:
+      tags:
+        - default
+        - scorer
+  - name: scorer
+  - name: technique
+  # Optional full preload/cache warming; scenarios fetch requested datasets on demand and add them to memory.
+  # - name: load_default_datasets

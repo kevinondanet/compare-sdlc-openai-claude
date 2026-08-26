@@ -1,0 +1,14 @@
+---
+description: Canonical change-package artifacts (changes/<CHG-id>/)
+globs: changes/**
+alwaysApply: false
+---
+
+# Canonical artifacts
+
+$artifacts
+
+Requirements use SHALL/MUST or EARS forms and carry WHEN/THEN scenarios (`SCN-nnn-nn`).
+Tasks carry an executable verification block (command, expected exit code). Markdown files
+hold YAML front-matter with the structured data; the body is human prose. Validate with
+`aisdlc change validate changes/<CHG-id> --strict` after every edit.

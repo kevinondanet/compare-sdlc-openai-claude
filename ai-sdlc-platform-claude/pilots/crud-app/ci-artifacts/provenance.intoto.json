@@ -1,0 +1,9 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [{"name": "dist/tickets-1.1.0-py3-none-any.whl", "digest": {"sha256": "3b5d4f0f2a1c9e8d7b6a5f4e3d2c1b0a9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c"}}],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {"buildType": "https://actions.github.io/buildtypes/workflow/v1", "externalParameters": {"workflow": {"ref": "refs/heads/main", "repository": "https://github.com/example/tickets", "path": ".github/workflows/aisdlc-ci.yml"}}},
+    "runDetails": {"builder": {"id": "https://github.com/actions/runner/github-hosted"}, "metadata": {"invocationId": "https://github.com/example/tickets/actions/runs/1/attempts/1"}}
+  }
+}

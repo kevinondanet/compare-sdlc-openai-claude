@@ -1,0 +1,64 @@
+{
+  "scenarios": 9,
+  "scenarios_with_tests": 9,
+  "acceptance_criteria_with_evidence": 100.0,
+  "critical_journeys": [
+    "REQ-001",
+    "REQ-002",
+    "REQ-003",
+    "REQ-005"
+  ],
+  "critical_journeys_with_e2e": [
+    "REQ-001",
+    "REQ-002",
+    "REQ-003",
+    "REQ-005"
+  ],
+  "critical_journeys_e2e": 100.0,
+  "missing": [],
+  "by_scenario": {
+    "SCN-001-01": [
+      "test_e2e.py",
+      "test_prompt_evals.py",
+      "test_safety_suite.py",
+      "test_screening.py"
+    ],
+    "SCN-001-02": [
+      "test_e2e.py",
+      "test_safety_suite.py",
+      "test_screening.py"
+    ],
+    "SCN-002-01": [
+      "test_agent.py",
+      "test_e2e.py",
+      "test_prompt_evals.py",
+      "test_safety_suite.py"
+    ],
+    "SCN-003-01": [
+      "test_agent.py",
+      "test_e2e.py",
+      "test_prompt_evals.py"
+    ],
+    "SCN-003-02": [
+      "test_agent.py",
+      "test_prompt_evals.py",
+      "test_safety_suite.py"
+    ],
+    "SCN-004-01": [
+      "test_agent.py",
+      "test_integration.py"
+    ],
+    "SCN-004-02": [
+      "test_integration.py"
+    ],
+    "SCN-005-01": [
+      "test_agent.py",
+      "test_e2e.py",
+      "test_prompt_evals.py",
+      "test_safety_suite.py"
+    ],
+    "SCN-006-01": [
+      "test_agent.py"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "commit_sha": "780aea0dc4fdc519b3ec832690e8e6281a98bf7c",
+  "details": {
+    "max_ms": 0.723,
+    "p95_target_ms": 50.0,
+    "samples": 200.0,
+    "throughput_min_rps": 100.0
+  },
+  "environment": "local",
+  "finished_at": "2026-08-26T06:15:34.283006Z",
+  "id": "EVD-performance-001",
+  "kind": "performance",
+  "p50_ms": 0.202,
+  "p95_ms": 0.248,
+  "produced_by": "aisdlc.testing.performance 0.1.0 (json)",
+  "report_uri": "/private/tmp/claude-501/-Users-kevinburrowes-Documents-core-frameworks/a7348089-e083-44fc-af3e-f666786b162e/scratchpad/ta4/changes/CHG-screen-tool-inputs/evidence/reports/perf.json",
+  "slo_met": true,
+  "started_at": "2026-08-26T06:15:34.283006Z",
+  "status": "complete",
+  "throughput": 5147.8
+}

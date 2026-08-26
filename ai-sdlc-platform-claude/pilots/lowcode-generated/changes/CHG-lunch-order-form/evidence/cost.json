@@ -1,0 +1,18 @@
+{
+  "budget_usd": 50.0,
+  "cached_tokens": 0,
+  "commit_sha": "7c88cdb32977dba570e2ffa29fe3429d2adb695e",
+  "environment": "local",
+  "escalations": 0,
+  "finished_at": "2026-08-26T06:10:49.219485Z",
+  "id": "EVD-cost-001",
+  "kind": "cost",
+  "produced_by": "aisdlc.orchestration.executor",
+  "report_uri": ".aisdlc/ledger.sqlite",
+  "started_at": "2026-08-26T06:10:44.373286Z",
+  "status": "complete",
+  "tokens_in": 13000,
+  "tokens_out": 2600,
+  "total_cost_usd": 0.0319,
+  "variance": -0.999362
+}

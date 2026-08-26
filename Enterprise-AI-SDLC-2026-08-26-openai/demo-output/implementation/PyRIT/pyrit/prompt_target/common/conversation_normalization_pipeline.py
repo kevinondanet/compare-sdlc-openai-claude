@@ -1,0 +1,173 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+import logging
+from collections.abc import Callable, Mapping
+from typing import Any
+
+from pyrit.message_normalizer import (
+    GenericSystemSquashNormalizer,
+    HistorySquashNormalizer,
+    JsonSchemaNormalizer,
+    MessageListNormalizer,
+)
+from pyrit.models import Message
+from pyrit.prompt_target.common.target_capabilities import (
+    CapabilityHandlingPolicy,
+    CapabilityName,
+    TargetCapabilities,
+    UnsupportedCapabilityBehavior,
+)
+
+logger = logging.getLogger(__name__)
+
+
+# ---------------------------------------------------------------------------
+# Single registry: add new normalizable capabilities here and nowhere else.
+# Order in the list determines pipeline execution order.
+# ---------------------------------------------------------------------------
+NormalizerFactory = Callable[[], MessageListNormalizer[Message]]
+
+_NORMALIZER_REGISTRY: list[tuple[CapabilityName, NormalizerFactory | None]] = [
+    # Editable-history adaptation is intentionally per-send only. Prepended
+    # conversation flows provide an explicit HistorySquashNormalizer override
+    # whose boundary comes from persisted message IDs. It must run before
+    # cardinality-changing target normalizers such as system-message squashing.
+    (CapabilityName.EDITABLE_HISTORY, None),
+    (CapabilityName.SYSTEM_PROMPT, GenericSystemSquashNormalizer),
+    (CapabilityName.MULTI_TURN, HistorySquashNormalizer),
+    (CapabilityName.JSON_SCHEMA, JsonSchemaNormalizer),
+]
+
+# Derived constant — no manual maintenance required.
+NORMALIZABLE_CAPABILITIES: frozenset[CapabilityName] = frozenset(cap for cap, _ in _NORMALIZER_REGISTRY)
+
+
+class ConversationNormalizationPipeline:
+    """
+    Ordered sequence of message normalizers that adapt conversations when
+    the target lacks certain capabilities.
+
+    The pipeline is constructed via ``from_capabilities``, which resolves
+    capabilities and policy into a concrete, ordered tuple of normalizers.
+    ``normalize_async`` then simply executes that tuple in order.
+
+    To add a new normalizable capability, add a single entry to
+    ``_NORMALIZER_REGISTRY``.  ``NORMALIZABLE_CAPABILITIES``,
+    pipeline ordering, and default normalizers are all derived from it.
+    """
+
+    def __init__(
+        self,
+        normalizers: tuple[MessageListNormalizer[Message], ...] = (),
+        *,
+        adapted_capabilities: frozenset[CapabilityName] = frozenset(),
+    ) -> None:
+        """
+        Initialize the normalization pipeline with an ordered sequence of normalizers.
+
+        Args:
+            normalizers (tuple[MessageListNormalizer[Message], ...]):
+                Ordered normalizers to apply during ``normalize_async``.
+                Defaults to an empty tuple (pass-through).
+            adapted_capabilities: Capabilities handled by the normalizer sequence.
+        """
+        self._normalizers = normalizers
+        self._adapted_capabilities = adapted_capabilities
+
+    @classmethod
+    def from_capabilities(
+        cls,
+        *,
+        capabilities: TargetCapabilities,
+        policy: CapabilityHandlingPolicy,
+        normalizer_overrides: Mapping[CapabilityName, MessageListNormalizer[Any]] | None = None,
+    ) -> "ConversationNormalizationPipeline":
+        """
+        Resolve capabilities and policy into a concrete pipeline of normalizers.
+
+        For each capability in ``_NORMALIZER_REGISTRY`` (in order):
+
+        * If the target already supports the capability, no normalizer is added.
+        * If the capability is missing and an explicit override exists, that
+          override is added regardless of the target's sparse policy mapping.
+        * Otherwise, if the policy is ``ADAPT``, the default normalizer is added
+          when one exists.
+        * If the capability is missing and the policy is ``RAISE``, no
+          normalizer is added (validation is deferred to
+          ``TargetConfiguration.ensure_can_handle()``).
+
+        Args:
+            capabilities (TargetCapabilities): The target's declared capabilities.
+            policy (CapabilityHandlingPolicy): How to handle each missing capability.
+            normalizer_overrides (Mapping[CapabilityName, MessageListNormalizer[Any]] | None):
+                Optional overrides for specific capability normalizers.
+                Falls back to the defaults from ``_NORMALIZER_REGISTRY``.
+
+        Returns:
+            ConversationNormalizationPipeline: A pipeline with the resolved
+            ordered tuple of normalizers.
+        """
+        overrides = normalizer_overrides or {}
+        normalizers: list[MessageListNormalizer[Message]] = []
+        adapted_capabilities: set[CapabilityName] = set()
+
+        for capability, default_normalizer_factory in _NORMALIZER_REGISTRY:
+            if capabilities.includes(capability=capability):
+                continue
+
+            override = overrides.get(capability)
+            if override is not None:
+                normalizers.append(override)
+                adapted_capabilities.add(capability)
+                continue
+
+            # ``behaviors`` is treated as a sparse mapping: a missing entry means
+            # RAISE (no adaptation; validation deferred to
+            # ``TargetConfiguration.ensure_can_handle``). This keeps the pipeline
+            # consistent with ``ensure_can_handle`` (which also tolerates missing
+            # entries) and forward-compatible — adding a new normalizable
+            # capability never retroactively breaks an existing custom policy.
+            behavior = policy.behaviors.get(capability, UnsupportedCapabilityBehavior.RAISE)
+
+            # RAISE capabilities are skipped here — no normalizer is added.
+            # Validation is deferred to TargetConfiguration.ensure_can_handle(),
+            # which should be called in the request flow once the full end-to-end
+            # workflow is implemented.
+            if behavior == UnsupportedCapabilityBehavior.ADAPT and default_normalizer_factory is not None:
+                normalizers.append(default_normalizer_factory())
+                adapted_capabilities.add(capability)
+
+        return cls(
+            normalizers=tuple(normalizers),
+            adapted_capabilities=frozenset(adapted_capabilities),
+        )
+
+    async def normalize_async(self, *, messages: list[Message]) -> list[Message]:
+        """
+        Run the pre-resolved normalizer sequence over the messages.
+
+        Args:
+            messages (list[Message]): The full conversation to normalize.
+
+        Returns:
+            list[Message]: The (possibly adapted) message list.
+        """
+        result = list(messages)
+        for normalizer in self._normalizers:
+            result = await normalizer.normalize_async(result)
+        return result
+
+    @property
+    def normalizers(self) -> tuple[MessageListNormalizer[Message], ...]:
+        """
+        The ordered normalizers in this pipeline.
+
+        Returns:
+            tuple[MessageListNormalizer[Message], ...]: The normalizer sequence.
+        """
+        return self._normalizers
+
+    def has_normalizer_for(self, *, capability: CapabilityName) -> bool:
+        """Return whether this pipeline adapts the specified capability."""
+        return capability in self._adapted_capabilities

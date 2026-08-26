@@ -1,0 +1,165 @@
+{
+  "approvals": [
+    {
+      "approved_at": "2026-08-26T06:15:34.575542Z",
+      "approver": "assistant-lead",
+      "note": "",
+      "role": "owner"
+    },
+    {
+      "approved_at": "2026-08-26T06:15:34.605240Z",
+      "approver": "security-reviewer",
+      "note": "ASR 0 on the agent baseline; manifest clean",
+      "role": "security"
+    }
+  ],
+  "change_id": "CHG-screen-tool-inputs",
+  "commit_sha": "780aea0dc4fdc519b3ec832690e8e6281a98bf7c",
+  "files": [
+    {
+      "path": "evidence/audit-entries.json",
+      "sha256": "e89d41a562a3ce45121064f931be13d86954aeeadbe3f362aacecbd4cc75b39b",
+      "size": 108874
+    },
+    {
+      "path": "evidence/audit.json",
+      "sha256": "e267751bfe01a8043983f7be01b21ae405a85e3e8ed97c085fb6f15853c11c83",
+      "size": 488
+    },
+    {
+      "path": "evidence/cost.json",
+      "sha256": "00587d6901a0ebbc181e191792115f5320484708a5223f101b0c3b98e1833617",
+      "size": 511
+    },
+    {
+      "path": "evidence/performance.json",
+      "sha256": "f87e3a56797b16791662b238ac14be14665838ac3f95d1cb34de4662b8ba1474",
+      "size": 727
+    },
+    {
+      "path": "evidence/portfolio.json",
+      "sha256": "edecb4c56aa05d608d54ecb257989b58ed9664560172bbd16cab81b650098d42",
+      "size": 4012
+    },
+    {
+      "path": "evidence/reviews.json",
+      "sha256": "3983a7d902b00a884fe50f5ca100598011e6b50dc95a70445a5f6084ca95f333",
+      "size": 640
+    },
+    {
+      "path": "evidence/security.json",
+      "sha256": "d3adea4853bcbcf891f1893cd3033fab94eaf70a258f32229a93b21c6f331633",
+      "size": 1936
+    },
+    {
+      "path": "evidence/tests.json",
+      "sha256": "fe8ba90320d8e8ccc090955bfc47c1210aafbed35e439d252b99c79551d24a5a",
+      "size": 7784
+    },
+    {
+      "path": "approvals.json",
+      "sha256": "d0f2a60d95b3f582135d4c448800d6e6ecb1320afae1b306b09ededa4e4741fd",
+      "size": 310
+    }
+  ],
+  "fingerprint": "365513defa5b75769ad89abe53d95e14d1fd465006978ceb2175cfffc64f5405",
+  "gate_results": [
+    {
+      "depth": "deep",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-reviews-005"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-audit-001",
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-performance-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-audit-001",
+        "EVD-cost-001",
+        "EVD-performance-001",
+        "EVD-reviews-005",
+        "EVD-security-001",
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:15:34.661377Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:15:34.728111Z",
+      "signer": "aisdlc",
+      "value": "9acb1e46f84b9be6d7e079cf628a483fcfda19e2d3aef1ed6c9feafa228ea929"
+    }
+  ],
+  "version": 1
+}

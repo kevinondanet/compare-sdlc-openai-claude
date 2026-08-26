@@ -1,0 +1,136 @@
+{
+  "approvals": [
+    {
+      "approved_at": "2026-08-26T06:10:41.752209Z",
+      "approver": "tickets-lead",
+      "note": "release review after wave 2",
+      "role": "owner"
+    }
+  ],
+  "change_id": "CHG-add-ticket-priority",
+  "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+  "files": [
+    {
+      "path": "evidence/cost.json",
+      "sha256": "f48d6faba1e0dd7c582ad5d943acc29252b1fba530889a5a7d1231905c7d41b6",
+      "size": 511
+    },
+    {
+      "path": "evidence/portfolio.json",
+      "sha256": "061a0c24d2ad48627f72a01e7af137cae9c1748f761ffba3a2446f908bfba78a",
+      "size": 3812
+    },
+    {
+      "path": "evidence/reviews.json",
+      "sha256": "24c90598ce3d2fc016f9ca43a7c638a402f79e8a70cbb94d22710ed5353861ec",
+      "size": 642
+    },
+    {
+      "path": "evidence/security.json",
+      "sha256": "e2ff66c479946cfe408967b63d33a7899d38253284326cb546d07caa05c049ba",
+      "size": 976
+    },
+    {
+      "path": "evidence/tests.json",
+      "sha256": "b1d5f09b6709a400078cde687c2fc601485ab671dca2614a1bfd23b0ba9b7f80",
+      "size": 6328
+    },
+    {
+      "path": "approvals.json",
+      "sha256": "797ca3b569545a10aaeaecf7dbe85db85f80aa1bafbb8fd453704f1e57b54dec",
+      "size": 157
+    }
+  ],
+  "fingerprint": "bc9e8c91253c5561286e6d877026071ed9fe391844a3e8346977e02a7ab49123",
+  "gate_results": [
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-reviews-005"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-reviews-005",
+        "EVD-security-001",
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:10:41.798803Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:10:41.851888Z",
+      "signer": "aisdlc",
+      "value": "002ea062df60a9e46317cb348988e01cb48e80cd09bf5de14c18842d3fcb1020"
+    }
+  ],
+  "version": 1
+}

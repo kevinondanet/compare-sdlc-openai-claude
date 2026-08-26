@@ -1,0 +1,50 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aisdlc governance hook --role planner --policy templates/agt/planner.yaml --audit-log evidence/audit.jsonl",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aisdlc governance hook --role planner --policy templates/agt/planner.yaml --audit-log evidence/audit.jsonl",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aisdlc governance hook --role planner --policy templates/agt/planner.yaml --audit-log evidence/audit.jsonl",
+            "timeout": 30
+          }
+        ],
+        "matcher": ""
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "aisdlc governance hook --role planner --policy templates/agt/planner.yaml --audit-log evidence/audit.jsonl",
+            "timeout": 30
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  }
+}

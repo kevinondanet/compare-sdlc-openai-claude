@@ -1,0 +1,195 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+import logging
+from typing import Literal
+
+from typing_extensions import override
+
+from pyrit.datasets.seed_datasets.remote.remote_dataset_loader import (
+    _RemoteDatasetLoader,
+)
+from pyrit.models import Modality, SeedDataset, SeedPrompt
+from pyrit.models.harm_category import HarmCategory
+
+logger = logging.getLogger(__name__)
+
+
+class _PKUSafeRLHFDataset(_RemoteDatasetLoader):
+    """
+    Loader for the PKU-SafeRLHF dataset.
+
+    This dataset contains prompts with RLHF markers for unsafe responses across
+    multiple harm categories.
+
+    Reference: https://huggingface.co/datasets/PKU-Alignment/PKU-SafeRLHF
+    Paper: [@ji2024pkusaferlhf]
+    """
+
+    _AUTHORS = [
+        "Jiaming Ji",
+        "Donghai Hong",
+        "Borong Zhang",
+        "Boyuan Chen",
+        "Juntao Dai",
+        "Boren Zheng",
+        "Tianyi Qiu",
+        "Jiayi Zhou",
+        "Kaile Wang",
+        "Boxuan Li",
+        "Sirui Han",
+        "Yike Guo",
+        "Yaodong Yang",
+    ]
+
+    _GROUPS = [
+        "Peking University",
+        "The Hong Kong University of Science and Technology",
+        "Infinigence-AI",
+    ]
+
+    # Metadata
+    modalities: tuple[Modality, ...] = (Modality.TEXT,)
+    size: str = "huge"  # 73907 prompt-response pairs across 19 harm categories
+    tags: frozenset[str] = frozenset({"default", "safety"})
+
+    def __init__(
+        self,
+        *,
+        source: str = "PKU-Alignment/PKU-SafeRLHF",
+        include_safe_prompts: bool = True,
+        filter_harm_categories: list[
+            Literal[
+                "Animal Abuse",
+                "Copyright Issues",
+                "Cybercrime",
+                "Discriminatory Behavior",
+                "Disrupting Public Order",
+                "Drugs",
+                "Economic Crime",
+                "Endangering National Security",
+                "Endangering Public Health",
+                "Environmental Damage",
+                "Human Trafficking",
+                "Insulting Behavior",
+                "Mental Manipulation",
+                "Physical Harm",
+                "Privacy Violation",
+                "Psychological Harm",
+                "Sexual Content",
+                "Violence",
+                "White-Collar Crime",
+            ]
+        ]
+        | None = None,
+    ) -> None:
+        """
+        Initialize the PKU-SafeRLHF dataset loader.
+
+        Args:
+            source: HuggingFace dataset identifier. Defaults to "PKU-Alignment/PKU-SafeRLHF".
+            include_safe_prompts: All prompts returned if True; only unsafe subset if False.
+            filter_harm_categories: List of harm categories to filter. Defaults to None (all categories).
+                Only prompts with at least one matching category are included.
+        """
+        self.source = source
+        self.include_safe_prompts = include_safe_prompts
+        self.filter_harm_categories = filter_harm_categories
+
+    @property
+    @override
+    def dataset_name(self) -> str:
+        """The dataset name."""
+        return "pku_safe_rlhf"
+
+    @override
+    async def fetch_dataset_async(self, *, cache: bool = True) -> SeedDataset:
+        """
+        Fetch PKU-SafeRLHF dataset and return as SeedDataset.
+
+        Args:
+            cache: Whether to cache the fetched dataset. Defaults to True.
+
+        Returns:
+            SeedDataset: A SeedDataset containing the PKU-SafeRLHF prompts.
+        """
+        logger.info(f"Loading PKU-SafeRLHF dataset from {self.source}")
+
+        data = await self._fetch_from_huggingface_async(
+            dataset_name=self.source,
+            config="default",
+            cache=cache,
+            split="train",
+        )
+
+        harm_category_alias_overrides: dict[str, list[HarmCategory]] = {
+            "Animal Abuse": [HarmCategory.OTHER],
+            "Copyright Issues": [HarmCategory.COPYRIGHT],
+            "Cybercrime": [HarmCategory.MALWARE, HarmCategory.COORDINATION_HARM],
+            "Discriminatory Behavior": [HarmCategory.HATE_SPEECH, HarmCategory.REPRESENTATIONAL],
+            "Disrupting Public Order": [HarmCategory.COORDINATION_HARM],
+            "Drugs": [HarmCategory.DRUG_USE, HarmCategory.REGULATED_GOODS],
+            "Economic Crime": [HarmCategory.SCAMS, HarmCategory.DECEPTION],
+            "Endangering National Security": [
+                HarmCategory.COORDINATION_HARM,
+                HarmCategory.INFRASTRUCTURE_RISK,
+                HarmCategory.MILITARY,
+            ],
+            "Endangering Public Health": [HarmCategory.PUBLIC_HEALTH],
+            "Environmental Damage": [HarmCategory.OTHER],
+            "Human Trafficking": [HarmCategory.COORDINATION_HARM, HarmCategory.SEXUAL_SOLICITATION],
+            "Insulting Behavior": [HarmCategory.HARASSMENT],
+            "Mental Manipulation": [HarmCategory.DECEPTION],
+            "Physical Harm": [HarmCategory.VIOLENT_CONTENT],
+            "Privacy Violation": [HarmCategory.PPI],
+            "Psychological Harm": [HarmCategory.MENTAL_HEALTH, HarmCategory.EMOTIONAL],
+            "Violence": [HarmCategory.VIOLENT_CONTENT],
+            "White-Collar Crime": [HarmCategory.SCAMS, HarmCategory.DECEPTION],
+        }
+        seed_prompts: list[SeedPrompt] = []
+
+        for item in data:
+            is_unsafe = not (item["is_response_0_safe"] and item["is_response_1_safe"])
+
+            # Skip if safe prompts are excluded and the item is safe
+            if not self.include_safe_prompts and not is_unsafe:
+                continue
+
+            # Collect harm categories from both responses, avoid duplicates
+            harm_categories = {
+                category
+                for response_key in ["response_0_harm_category", "response_1_harm_category"]
+                for category, is_harmful in item[response_key].items()
+                if is_harmful
+            }
+
+            # Add the prompt in two cases:
+            # 1. No harm categories are provided for filtering
+            # 2. At least one harm category matches the specified filter criteria
+            if not self.filter_harm_categories or any(
+                category in self.filter_harm_categories for category in harm_categories
+            ):
+                standardized_harm_categories = self._standardize_harm_categories(
+                    sorted(harm_categories),
+                    alias_overrides=harm_category_alias_overrides,
+                )
+                seed_prompts.append(
+                    SeedPrompt(
+                        value=item["prompt"],
+                        data_type="text",
+                        dataset_name=self.dataset_name,
+                        harm_categories=standardized_harm_categories,
+                        description=(
+                            "This is a Hugging Face dataset that labels a prompt and 2 responses categorizing "
+                            "their helpfulness or harmfulness. Only the 'prompt' column is extracted."
+                        ),
+                        source=f"https://huggingface.co/datasets/{self.source}",
+                        authors=self._AUTHORS,
+                        groups=self._GROUPS,
+                        metadata=({"pku_categories": ", ".join(sorted(harm_categories))} if harm_categories else None),
+                    )
+                )
+
+        logger.info(f"Successfully loaded {len(seed_prompts)} prompts from PKU-SafeRLHF dataset")
+
+        return SeedDataset(seeds=seed_prompts, dataset_name=self.dataset_name)

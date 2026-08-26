@@ -1,0 +1,17 @@
+---
+description: AI-SDLC canonical workflow for project $project_name
+globs:
+alwaysApply: true
+---
+
+# AI-SDLC workflow
+
+Workflow state lives only in `changes/<CHG-id>/`; the `aisdlc` CLI creates, validates and
+gates change packages. Follow the phases in order and never claim a step is done without
+the command's exit code and the evidence file it writes.
+
+$workflow
+
+## Effective policy
+
+$policy_summary

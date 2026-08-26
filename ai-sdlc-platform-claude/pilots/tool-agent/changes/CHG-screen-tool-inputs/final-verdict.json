@@ -1,0 +1,104 @@
+{
+  "bundle_digest": "df73f192fa96c15a2cee8fe9299acba0199f9229ff62946db6cf3c0922f46a3e",
+  "change_id": "CHG-screen-tool-inputs",
+  "commit_sha": "780aea0dc4fdc519b3ec832690e8e6281a98bf7c",
+  "fingerprint": "365513defa5b75769ad89abe53d95e14d1fd465006978ceb2175cfffc64f5405",
+  "gate_results": [
+    {
+      "depth": "deep",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-reviews-005"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-audit-001",
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-performance-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "deep",
+      "evidence_ids": [
+        "EVD-audit-001",
+        "EVD-cost-001",
+        "EVD-performance-001",
+        "EVD-reviews-005",
+        "EVD-security-001",
+        "EVD-tests-005",
+        "EVD-tests-006",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:15:34.661377Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:15:34.728111Z",
+      "signer": "aisdlc",
+      "value": "9acb1e46f84b9be6d7e079cf628a483fcfda19e2d3aef1ed6c9feafa228ea929"
+    }
+  ]
+}

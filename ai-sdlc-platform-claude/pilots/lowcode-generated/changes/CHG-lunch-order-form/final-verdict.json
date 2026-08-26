@@ -1,0 +1,100 @@
+{
+  "bundle_digest": "2f1948526258a4de15b9b9bb1d143f2f980b407099a1b5d9a9fbbe4766440e78",
+  "change_id": "CHG-lunch-order-form",
+  "commit_sha": "7c88cdb32977dba570e2ffa29fe3429d2adb695e",
+  "fingerprint": "49f7a0fb8d5213fedaed29bd3bf5773ce6a200bf8961d7d4e46b5d0493471ef9",
+  "gate_results": [
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015",
+        "EVD-tests-016",
+        "EVD-tests-017"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-reviews-007"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-reviews-007",
+        "EVD-security-001",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015",
+        "EVD-tests-016",
+        "EVD-tests-017"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:10:52.460383Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:10:52.520137Z",
+      "signer": "aisdlc",
+      "value": "1cb9a8b4a381eed991d8de1c69b28300373e18c77148f03eec33b0d06b8c35f9"
+    }
+  ]
+}

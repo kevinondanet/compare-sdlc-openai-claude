@@ -1,0 +1,10 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {"timestamp": "2024-06-01T00:00:00Z", "tools": [{"name": "cyclonedx-python", "version": "4.0.0"}]},
+  "components": [
+    {"type": "library", "name": "pydantic", "version": "2.7.0", "purl": "pkg:pypi/pydantic@2.7.0"},
+    {"type": "library", "name": "rich", "version": "13.7.1", "purl": "pkg:pypi/rich@13.7.1"}
+  ]
+}

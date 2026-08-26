@@ -1,0 +1,24 @@
+[
+  {
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "environment": "local",
+    "findings": [],
+    "finished_at": "2026-08-26T06:10:37.906727Z",
+    "id": "EVD-reviews-005",
+    "implementer_model_family": "gpt",
+    "kind": "reviews",
+    "produced_by": "dry-run:claude-sonnet-5",
+    "report_uri": "evidence/logs/EVD-reviews-005.json",
+    "reviewer_model_family": "claude",
+    "round": 1,
+    "scope": [
+      "TASK-001.dryrun",
+      "TASK-002.dryrun",
+      "TASK-003.dryrun",
+      "TASK-004.dryrun"
+    ],
+    "started_at": "2026-08-26T06:10:37.906666Z",
+    "status": "complete",
+    "verdict": "approved"
+  }
+]

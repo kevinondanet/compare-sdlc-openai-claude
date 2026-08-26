@@ -1,0 +1,17 @@
+[
+  {
+    "layer": "e2e",
+    "executed": true,
+    "complete": true,
+    "metrics": {
+      "acceptance_criteria_with_evidence": 100.0,
+      "critical_journeys_e2e": 100.0
+    },
+    "evidence_ids": [
+      "EVD-tests-016"
+    ],
+    "notes": [
+      "5/5 scenarios traced to tests"
+    ]
+  }
+]

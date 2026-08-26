@@ -1,0 +1,12 @@
+{
+  "slug": "lunch_order",
+  "title": "Lunch order",
+  "cutoff": {"weekday": "friday", "time": "10:00"},
+  "fields": [
+    {"name": "dish", "type": "choice", "required": true,
+     "choices": ["falafel wrap", "chicken curry", "veggie pizza", "salad bowl"]},
+    {"name": "quantity", "type": "number", "required": true, "minimum": 1, "maximum": 5},
+    {"name": "team", "type": "text", "required": true, "max_length": 40},
+    {"name": "notes", "type": "text", "required": false, "max_length": 120}
+  ]
+}

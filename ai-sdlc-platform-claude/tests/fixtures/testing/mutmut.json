@@ -1,0 +1,1 @@
+{"tool": "mutmut", "paths_to_mutate": ["src/pkg"], "paths_to_exclude": ["src/pkg/cli.py"], "killed": 12, "survived": 4, "timeout": 1, "suspicious": 1, "skipped": 2}

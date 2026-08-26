@@ -1,0 +1,2 @@
+# Round 2: the non-functional requirement added in round 1 needs an acceptance scenario.
+CQ-001: WHEN 500 orders have been submitted THEN listing and exporting them completes within 1 second

@@ -1,0 +1,22 @@
+
+# Builds the pyrit environment and runs integration tests
+
+trigger: none
+
+schedules:
+- cron: "0 */3 * * *"  # Every 3 hours
+  displayName: Integration Tests Every 3 Hours
+  branches:
+    include:
+      - main
+  always: true
+
+jobs:
+- template: test-job-template.yml
+  parameters:
+    jobName: IntegrationTests
+    jobDisplayName: "Builds the pyrit environment and runs integration tests"
+    testAzureSubscription: 'integration-test-service-connection'
+    newDir: integration_test_directory
+    testsFolder: integration
+    makeTarget: integration-test

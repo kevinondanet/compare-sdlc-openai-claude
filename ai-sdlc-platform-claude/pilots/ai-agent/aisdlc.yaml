@@ -1,0 +1,18 @@
+# Pilot 3 — customer-support assistant with tool access (agentic change).
+name: support-assistant
+languages: [python]
+frameworks: []
+architecture_style: agent
+risk_classification:
+  default: ai_agent
+  rules:
+    - {pattern: "agent/*", risk_class: ai_agent}
+    - {pattern: "docs/*", risk_class: docs_only}
+test_commands:
+  unit: python3 -m unittest discover -s tests -q
+  lint: null
+  types: null
+critical_modules: [agent/assistant.py]
+overrides:
+  security_baselines: {asr_threshold: 0.05, max_undetermined_rate: 0.05}
+  cost_limits: {max_agent_turns: 12}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+  <testsuite name="pytest" errors="1" failures="1" skipped="1" tests="6" time="0.42">
+    <testcase classname="tests.test_calc" name="test_add" time="0.001"/>
+    <testcase classname="tests.test_calc" name="test_sub" time="0.001"/>
+    <testcase classname="tests.test_calc" name="test_mul" time="0.001"/>
+    <testcase classname="tests.test_calc" name="test_div_zero" time="0.001">
+      <failure message="ZeroDivisionError">Traceback ...</failure>
+    </testcase>
+    <testcase classname="tests.test_calc" name="test_broken_fixture" time="0.001">
+      <error message="fixture error">Traceback ...</error>
+    </testcase>
+    <testcase classname="tests.test_calc" name="test_windows_only" time="0.0">
+      <skipped message="not windows"/>
+    </testcase>
+  </testsuite>
+</testsuites>

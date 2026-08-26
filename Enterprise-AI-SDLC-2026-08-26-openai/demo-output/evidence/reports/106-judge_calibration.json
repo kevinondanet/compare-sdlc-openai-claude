@@ -1,0 +1,1 @@
+{"kind":"judge_calibration","metrics":{"agreement_rate":"0.92","dataset_digest":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","false_accept_rate":"0.02","framework":"PyRIT","human_labeled_cases":50,"scorer_eval_hash":"c323ad1f2fdb024cfe83d6bbeb614f8968e2ff106ce538c0ac34c205436e864b"},"schema":"example.ci-report/v1","source_revision":"abcdef1"}

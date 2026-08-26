@@ -1,0 +1,179 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+import ast
+import logging
+from typing import Literal
+
+from typing_extensions import override
+
+from pyrit.datasets.seed_datasets.remote.remote_dataset_loader import (
+    _RemoteDatasetLoader,
+)
+from pyrit.models import Modality, SeedDataset, SeedPrompt
+from pyrit.models.harm_category import HarmCategory
+
+logger = logging.getLogger(__name__)
+
+
+class _AyaRedteamingDataset(_RemoteDatasetLoader):
+    """
+    Loader for the Aya Red-teaming dataset.
+
+    This dataset contains multilingual red-teaming prompts across various harm categories
+    and can be filtered by language, harm categories, and global/local scope.
+
+    Reference: [@aakanksha2024multilingual]
+    HuggingFace: https://huggingface.co/datasets/CohereForAI/aya_redteaming
+    License: Apache 2.0
+
+    Warning: Due to the nature of these prompts, consult your legal department
+    before testing them with LLMs to ensure compliance and reduce potential risks.
+    """
+
+    _AUTHORS = [
+        "Aakanksha",
+        "Arash Ahmadian",
+        "Beyza Ermis",
+        "Seraphina Goldfarb-Tarrant",
+        "Julia Kreutzer",
+        "Marzieh Fadaee",
+        "Sara Hooker",
+    ]
+
+    _GROUPS = ["Cohere For AI", "Cohere"]
+
+    LANGUAGE_CODES = {
+        "English": "eng",
+        "Hindi": "hin",
+        "French": "fra",
+        "Spanish": "spa",
+        "Arabic": "arb",
+        "Russian": "rus",
+        "Serbian": "srp",
+        "Tagalog": "tgl",
+    }
+
+    # Metadata
+    modalities: tuple[Modality, ...] = (Modality.TEXT,)
+    size: str = "medium"  # 987 prompts across multiple languages
+    tags: frozenset[str] = frozenset({"safety", "multilingual"})
+
+    def __init__(
+        self,
+        *,
+        language: Literal[
+            "English", "Hindi", "French", "Spanish", "Arabic", "Russian", "Serbian", "Tagalog"
+        ] = "English",
+        harm_categories: list[
+            Literal[
+                "Bullying & Harassment",
+                "Discrimination & Injustice",
+                "Graphic material",
+                "Harms of Representation Allocation and Quality of Service",
+                "Hate Speech",
+                "Non-consensual sexual content",
+                "Profanity",
+                "Self-Harm",
+                "Violence, Threats & Incitement",
+            ]
+        ]
+        | None = None,
+        harm_scope: Literal["global", "local"] | None = None,
+    ) -> None:
+        """
+        Initialize the Aya Red-teaming dataset loader.
+
+        Args:
+            language: The language to fetch prompts for. Defaults to "English".
+            harm_categories: List of harm categories to filter. Defaults to None (all categories).
+                Only prompts with at least one matching category are included.
+            harm_scope: Whether to fetch globally or locally harmful prompts.
+                Defaults to None (all examples included).
+        """
+        self.language = language
+        self.harm_categories_filter = harm_categories
+        self.harm_scope = harm_scope
+
+        lang_code = self.LANGUAGE_CODES[language]
+        self.source = f"https://huggingface.co/datasets/CohereForAI/aya_redteaming/raw/main/aya_{lang_code}.jsonl"
+
+    @property
+    @override
+    def dataset_name(self) -> str:
+        """The dataset name."""
+        return "aya_redteaming"
+
+    @override
+    async def fetch_dataset_async(self, *, cache: bool = True) -> SeedDataset:
+        """
+        Fetch Aya Red-teaming dataset with optional filtering and return as SeedDataset.
+
+        Args:
+            cache: Whether to cache the fetched dataset. Defaults to True.
+
+        Returns:
+            SeedDataset: A SeedDataset containing the filtered red-teaming prompts.
+        """
+        logger.info(f"Loading Aya Red-teaming dataset for language: {self.language}")
+
+        # Fetch from URL
+        examples = self._fetch_from_url(
+            source=self.source,
+            source_type="public_url",
+            cache=cache,
+        )
+
+        harm_category_alias_overrides: dict[str, list[HarmCategory]] = {
+            "bullying & harassment": [HarmCategory.HARASSMENT],
+            "discrimination & injustice": [HarmCategory.HATE_SPEECH, HarmCategory.REPRESENTATIONAL],
+            "graphic material": [HarmCategory.VIOLENT_CONTENT],
+            "harms of representation allocation and quality of service": [
+                HarmCategory.REPRESENTATIONAL,
+                HarmCategory.ALLOCATION,
+                HarmCategory.QUALITY_OF_SERVICE,
+            ],
+            "non-consensual sexual content": [HarmCategory.SEXUAL_CONTENT, HarmCategory.NONCONSENSUAL_UPLOAD],
+            "violence, threats & incitement": [
+                HarmCategory.VIOLENT_CONTENT,
+                HarmCategory.VIOLENT_THREATS,
+                HarmCategory.COORDINATION_HARM,
+            ],
+        }
+        seed_prompts: list[SeedPrompt] = []
+
+        for example in examples:
+            categories = ast.literal_eval(example["harm_category"])
+            standardized_categories = self._standardize_harm_categories(
+                categories,
+                alias_overrides=harm_category_alias_overrides,
+            )
+
+            # Apply filters
+            if self.harm_categories_filter is not None and not any(
+                cat in categories for cat in self.harm_categories_filter
+            ):
+                continue
+
+            if self.harm_scope is not None and example["global_or_local"] != self.harm_scope:
+                continue
+
+            seed_prompts.append(
+                SeedPrompt(
+                    value=example["prompt"],
+                    data_type="text",
+                    dataset_name=self.dataset_name,
+                    harm_categories=standardized_categories if standardized_categories else None,
+                    metadata={
+                        "aya_redteaming_categories": ", ".join(categories),
+                        "aya_redteaming_scope": example["global_or_local"],
+                    },
+                    source="https://huggingface.co/datasets/CohereForAI/aya_redteaming",
+                    authors=self._AUTHORS,
+                    groups=self._GROUPS,
+                )
+            )
+
+        logger.info(f"Successfully loaded {len(seed_prompts)} prompts from Aya Red-teaming dataset")
+
+        return SeedDataset(seeds=seed_prompts, dataset_name=self.dataset_name)

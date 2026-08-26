@@ -1,0 +1,7 @@
+[
+  {"job_id": "a1", "module_path": "src/pkg/calc.py", "operator_name": "core/ReplaceBinaryOperator_Add_Sub", "start_pos": [4, 11], "test_outcome": "killed", "worker_outcome": "normal"},
+  {"job_id": "a2", "module_path": "src/pkg/calc.py", "operator_name": "core/ReplaceComparisonOperator_Eq_NotEq", "start_pos": [9, 7], "test_outcome": "survived", "worker_outcome": "normal"},
+  {"job_id": "a3", "module_path": "src/pkg/calc.py", "operator_name": "core/NumberReplacer", "start_pos": [2, 9], "test_outcome": "killed", "worker_outcome": "timeout"},
+  {"job_id": "a4", "module_path": "src/pkg/calc.py", "operator_name": "core/NumberReplacer", "start_pos": [3, 9], "test_outcome": "incompetent", "worker_outcome": "exception"},
+  {"job_id": "a5", "module_path": "src/pkg/calc.py", "operator_name": "core/NumberReplacer", "start_pos": [6, 9], "test_outcome": null, "worker_outcome": null}
+]

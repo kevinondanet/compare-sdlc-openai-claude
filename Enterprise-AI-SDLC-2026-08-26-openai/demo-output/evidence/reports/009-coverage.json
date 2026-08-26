@@ -1,0 +1,1 @@
+{"kind":"coverage","metrics":{"branch_coverage":"0.75","critical_module_coverage":"0.95","diff_coverage":"0.92","line_coverage":"0.80"},"schema":"example.ci-report/v1","source_revision":"abcdef1"}

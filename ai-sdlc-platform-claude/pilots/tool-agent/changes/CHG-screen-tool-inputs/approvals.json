@@ -1,0 +1,14 @@
+[
+  {
+    "approved_at": "2026-08-26T06:15:34.575542Z",
+    "approver": "assistant-lead",
+    "note": "",
+    "role": "owner"
+  },
+  {
+    "approved_at": "2026-08-26T06:15:34.605240Z",
+    "approver": "security-reviewer",
+    "note": "ASR 0 on the agent baseline; manifest clean",
+    "role": "security"
+  }
+]

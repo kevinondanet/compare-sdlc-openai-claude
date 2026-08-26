@@ -1,0 +1,12 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "lunch-orders",
+  "documentNamespace": "https://example.org/spdx/lunch-orders-1.1.0",
+  "creationInfo": {"created": "2026-08-26T00:00:00Z", "creators": ["Tool: syft-1.10.0"]},
+  "packages": [
+    {"name": "lunch-orders", "SPDXID": "SPDXRef-Package-lunch-orders", "versionInfo": "1.1.0", "downloadLocation": "NOASSERTION"},
+    {"name": "python", "SPDXID": "SPDXRef-Package-python", "versionInfo": "3.13", "downloadLocation": "NOASSERTION"}
+  ]
+}

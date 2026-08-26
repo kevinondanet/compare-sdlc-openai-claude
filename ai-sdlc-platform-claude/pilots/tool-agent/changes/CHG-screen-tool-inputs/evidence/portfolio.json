@@ -1,0 +1,182 @@
+{
+  "evaluated_at": "2026-08-26T06:15:34.342105Z",
+  "inputs": {
+    "critical_module_coverage": {
+      "assistant/agent.py": 91.55,
+      "assistant/governance.py": 100.0
+    },
+    "exceptions": [],
+    "runs": [
+      {
+        "complete": true,
+        "evidence_ids": [
+          "EVD-tests-013"
+        ],
+        "executed": true,
+        "failed": 0,
+        "layer": "e2e",
+        "metrics": {
+          "acceptance_criteria_with_evidence": 100.0,
+          "critical_journeys_e2e": 100.0
+        },
+        "notes": [
+          "9/9 scenarios traced to tests"
+        ],
+        "passed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "kind": "portfolio",
+  "report": {
+    "breaches": [],
+    "evaluated_at": "2026-08-26T06:15:34.341983Z",
+    "exceptions_applied": [],
+    "exceptions_expired": [],
+    "layers": [
+      {
+        "evidence_ids": [
+          "EVD-tests-005",
+          "EVD-tests-006",
+          "EVD-tests-008"
+        ],
+        "failed": 0,
+        "layer": "unit",
+        "passed": 3,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-010"
+        ],
+        "failed": 0,
+        "layer": "property",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-011"
+        ],
+        "failed": 0,
+        "layer": "integration",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-012"
+        ],
+        "failed": 0,
+        "layer": "contract",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-013",
+          "EVD-tests-013"
+        ],
+        "failed": 0,
+        "layer": "e2e",
+        "passed": 0,
+        "reasons": [
+          "9/9 scenarios traced to tests"
+        ],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-014"
+        ],
+        "failed": 0,
+        "layer": "architecture",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-security-001"
+        ],
+        "failed": 0,
+        "layer": "security",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-007",
+          "EVD-tests-009",
+          "EVD-security-001"
+        ],
+        "failed": 0,
+        "layer": "agent_safety",
+        "passed": 1,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-tests-015"
+        ],
+        "failed": 0,
+        "layer": "prompt_evals",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      },
+      {
+        "evidence_ids": [
+          "EVD-performance-001"
+        ],
+        "failed": 0,
+        "layer": "performance",
+        "passed": 0,
+        "reasons": [],
+        "required": true,
+        "skipped": 0,
+        "status": "passed"
+      }
+    ],
+    "missing_layers": [],
+    "risk_class": "ai_agent",
+    "thresholds": {
+      "acceptance_criteria_with_evidence": 100.0,
+      "agent_safety_scenarios_executed": 100.0,
+      "branches": 70.0,
+      "critical_journeys_e2e": 100.0,
+      "critical_modules": 90.0,
+      "diff_lines": 90.0,
+      "fail_on_incomplete": true,
+      "lines": 78.0,
+      "lines_floor": 75.0,
+      "mutation_score": 0.6,
+      "require_diff_coverage": true
+    }
+  },
+  "risk_class": "ai_agent"
+}

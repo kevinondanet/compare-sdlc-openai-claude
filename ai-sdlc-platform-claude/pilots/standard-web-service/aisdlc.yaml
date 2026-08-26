@@ -1,0 +1,17 @@
+# Pilot 2 — standard web service (WSGI, no framework).
+name: orders-service
+languages: [python]
+frameworks: [wsgi]
+architecture_style: modular_monolith
+risk_classification:
+  default: standard
+  rules:
+    - {pattern: "service/auth/*", risk_class: high}
+    - {pattern: "docs/*", risk_class: docs_only}
+test_commands:
+  unit: python3 -m unittest discover -s tests -q
+  lint: null
+  types: null
+critical_modules: [service/health.py]
+overrides:
+  cost_limits: {max_review_rounds: 2}

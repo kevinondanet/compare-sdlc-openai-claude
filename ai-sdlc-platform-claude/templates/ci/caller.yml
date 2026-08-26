@@ -1,0 +1,111 @@
+# Consumer ("caller") workflow template: wires a repository to the organisation's reusable
+# workflows. Rendered by `aisdlc ci render` — the org repository and commit SHA are filled
+# in so that every `uses:` is pinned. Job-level permissions grant only what each callee needs.
+name: aisdlc-ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions: {}
+
+concurrency:
+  group: aisdlc-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/build-and-test.yml@{{ workflows_ref }}" # {{ workflows_version }}
+    with:
+      change-dir: ""
+      diff-base: origin/main
+
+  architecture-tests:
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/architecture-tests.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  mutation:
+    if: github.event_name != 'schedule'
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/mutation.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  codeql:
+    permissions:
+      contents: read
+      actions: read
+      security-events: write
+    uses: "{{ workflows_repo }}/.github/workflows/codeql.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  dependency-review:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/dependency-review.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  secret-scan:
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/secret-scan.yml@{{ workflows_ref }}" # {{ workflows_version }}
+    secrets:
+      GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+
+  sbom-provenance:
+    needs: [build-and-test]
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    uses: "{{ workflows_repo }}/.github/workflows/sbom-provenance.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  scorecard:
+    if: github.event_name == 'schedule' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+      security-events: write
+    uses: "{{ workflows_repo }}/.github/workflows/scorecard.yml@{{ workflows_ref }}" # {{ workflows_version }}
+
+  ai-review:
+    if: github.event_name == 'pull_request'
+    needs: [build-and-test]
+    permissions:
+      contents: read
+      pull-requests: write
+    uses: "{{ workflows_repo }}/.github/workflows/ai-review.yml@{{ workflows_ref }}" # {{ workflows_version }}
+    with:
+      change-dir: ""
+    secrets:
+      MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+
+  safety-regression:
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/safety-regression.yml@{{ workflows_ref }}" # {{ workflows_version }}
+    with:
+      module: "{{ safety_module }}"
+    secrets:
+      MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+
+  pyrit-campaign:
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/pyrit-campaign.yml@{{ workflows_ref }}" # {{ workflows_version }}
+    with:
+      risk-class: "{{ risk_class }}"
+      target: "{{ pyrit_target }}"
+    secrets:
+      MODEL_API_KEY: ${{ secrets.MODEL_API_KEY }}
+
+  cost-benchmark:
+    needs: [build-and-test]
+    permissions:
+      contents: read
+    uses: "{{ workflows_repo }}/.github/workflows/cost-benchmark.yml@{{ workflows_ref }}" # {{ workflows_version }}

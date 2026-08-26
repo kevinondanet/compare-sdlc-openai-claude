@@ -1,0 +1,63 @@
+# Reusable organisation workflow: mutation-score evidence (project command or the
+# platform's bounded built-in Python runner) with explicit scope disclosure.
+name: mutation
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        type: string
+        default: ubuntu-24.04
+      max-mutants:
+        description: Upper bound on mutants tested by the built-in runner.
+        type: string
+        default: "25"
+      timeout-seconds:
+        description: Per-mutant verification timeout.
+        type: string
+        default: "120"
+      aisdlc-spec:
+        type: string
+        default: "{{ aisdlc_spec }}"
+      egress-policy:
+        type: string
+        default: audit
+      allowed-endpoints:
+        type: string
+        default: ""
+
+permissions: {}
+
+jobs:
+  mutation:
+    runs-on: ${{ inputs.runs-on }}
+    timeout-minutes: 120
+    permissions:
+      contents: read
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@0080882f6c36860b6ba35c610c98ce87d4e2f26f # v2.10.2
+        with:
+          egress-policy: ${{ inputs.egress-policy }}
+          allowed-endpoints: ${{ inputs.allowed-endpoints }}
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - "{{ setup_steps_fixed }}"
+      - name: Install platform CLI
+        env:
+          AISDLC_SPEC: ${{ inputs.aisdlc-spec }}
+        run: |
+          [[ "$AISDLC_SPEC" =~ ^[A-Za-z0-9_.,;=<>!~@:/+\[\]-]+$ ]] || { echo "::error::invalid aisdlc-spec"; exit 1; }
+          python -m pip install --disable-pip-version-check --quiet "$AISDLC_SPEC"
+      - "{{ install_steps }}"
+      - "{{ mutation_step }}"
+      - name: Upload mutation evidence
+        if: always()
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
+        with:
+          name: mutation
+          path: reports/mutation.json
+          retention-days: 30
+          if-no-files-found: warn

@@ -1,0 +1,55 @@
+{
+  "brief_hash": "a0d76d999a24bed4089d341f0f2aef00a0b8f439d76d435efa378ec5a66c884f",
+  "diff": {
+    "base": "ed0b2af1bcc40105d829f49300fdc251289b20ef",
+    "files": [
+      "TASK-004.dryrun"
+    ],
+    "head": "aef52a6213248e6fdc580ff2743fcb5d6d9932b1"
+  },
+  "evidence": {
+    "commit_sha": "aef52a6213248e6fdc580ff2743fcb5d6d9932b1",
+    "environment": "local",
+    "findings": [],
+    "finished_at": "2026-08-26T06:10:44.895722Z",
+    "id": "EVD-reviews-001",
+    "implementer_model_family": "gpt",
+    "kind": "reviews",
+    "produced_by": "dry-run:claude-sonnet-5",
+    "report_uri": "evidence/logs/EVD-reviews-001.json",
+    "reviewer_model_family": "claude",
+    "round": 1,
+    "scope": [
+      "TASK-004.dryrun"
+    ],
+    "started_at": "2026-08-26T06:10:44.895651Z",
+    "status": "complete",
+    "verdict": "approved"
+  },
+  "result": {
+    "exit_code": null,
+    "findings": [],
+    "ledger_event_id": "1ad2d74c5d3f45459a8619cdd9984a55",
+    "raw_output": "",
+    "runner": "dry-run",
+    "status": "success",
+    "summary": "dry-run reviewer for TASK-004 round 1: success",
+    "usage": {
+      "cache_write_tokens": 0,
+      "cached_tokens": 0,
+      "cost_usd": 0.004,
+      "family": "claude",
+      "input_tokens": 1000,
+      "latency_ms": 50.0,
+      "model": "claude-sonnet-5",
+      "output_tokens": 200,
+      "provider": "anthropic",
+      "reasoning_tokens": 0,
+      "session_id": "",
+      "tool_calls": 0,
+      "turns": 0
+    },
+    "verdict": null
+  },
+  "scope": []
+}

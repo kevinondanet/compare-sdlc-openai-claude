@@ -1,0 +1,172 @@
+{
+  "archived_at": "2026-08-26T06:10:37.917494+00:00",
+  "head": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+  "reviews": [
+    {
+      "commit_sha": "78404af96a16b81ee7471128e789d82d97743138",
+      "environment": "local",
+      "findings": [],
+      "finished_at": "2026-08-26T06:10:35.662243Z",
+      "id": "EVD-reviews-001",
+      "implementer_model_family": "gpt",
+      "kind": "reviews",
+      "produced_by": "dry-run:claude-sonnet-5",
+      "report_uri": "evidence/logs/EVD-reviews-001.json",
+      "reviewer_model_family": "claude",
+      "round": 1,
+      "scope": [
+        "TASK-001.dryrun"
+      ],
+      "started_at": "2026-08-26T06:10:35.662146Z",
+      "status": "complete",
+      "verdict": "approved"
+    },
+    {
+      "commit_sha": "83e76c7214d035d70e111099c488e4bf4afff69b",
+      "environment": "local",
+      "findings": [],
+      "finished_at": "2026-08-26T06:10:36.099669Z",
+      "id": "EVD-reviews-002",
+      "implementer_model_family": "gpt",
+      "kind": "reviews",
+      "produced_by": "dry-run:claude-sonnet-5",
+      "report_uri": "evidence/logs/EVD-reviews-002.json",
+      "reviewer_model_family": "claude",
+      "round": 1,
+      "scope": [
+        "TASK-002.dryrun"
+      ],
+      "started_at": "2026-08-26T06:10:36.099592Z",
+      "status": "complete",
+      "verdict": "approved"
+    },
+    {
+      "commit_sha": "13b2d3b2623e966958bdd3837e7fe2df3df9ab14",
+      "environment": "local",
+      "findings": [],
+      "finished_at": "2026-08-26T06:10:36.149281Z",
+      "id": "EVD-reviews-003",
+      "implementer_model_family": "gpt",
+      "kind": "reviews",
+      "produced_by": "dry-run:claude-sonnet-5",
+      "report_uri": "evidence/logs/EVD-reviews-003.json",
+      "reviewer_model_family": "claude",
+      "round": 1,
+      "scope": [
+        "TASK-003.dryrun"
+      ],
+      "started_at": "2026-08-26T06:10:36.149216Z",
+      "status": "complete",
+      "verdict": "approved"
+    },
+    {
+      "commit_sha": "e0c1044694586b6ae9696ffb7eb8979293a1ce18",
+      "environment": "local",
+      "findings": [],
+      "finished_at": "2026-08-26T06:10:37.031524Z",
+      "id": "EVD-reviews-004",
+      "implementer_model_family": "gpt",
+      "kind": "reviews",
+      "produced_by": "dry-run:claude-sonnet-5",
+      "report_uri": "evidence/logs/EVD-reviews-004.json",
+      "reviewer_model_family": "claude",
+      "round": 1,
+      "scope": [
+        "TASK-004.dryrun"
+      ],
+      "started_at": "2026-08-26T06:10:37.031459Z",
+      "status": "complete",
+      "verdict": "approved"
+    }
+  ],
+  "tests": [
+    {
+      "command": "python3 -m unittest -q tests.test_priority.PriorityFieldTest",
+      "commit_sha": "78404af96a16b81ee7471128e789d82d97743138",
+      "coverage": {
+        "branches": null,
+        "diff_lines": null,
+        "lines": null
+      },
+      "environment": "local",
+      "exit_code": 0,
+      "failed": 0,
+      "finished_at": "2026-08-26T06:10:35.612822Z",
+      "id": "EVD-tests-001",
+      "kind": "tests",
+      "mutation": null,
+      "passed": 1,
+      "produced_by": "aisdlc.orchestration.executor",
+      "report_uri": "evidence/logs/TASK-001-r1.log",
+      "skipped": 0,
+      "started_at": "2026-08-26T06:10:35.547137Z",
+      "status": "complete"
+    },
+    {
+      "command": "python3 -m unittest -q tests.test_priority.PrioritySortTest",
+      "commit_sha": "83e76c7214d035d70e111099c488e4bf4afff69b",
+      "coverage": {
+        "branches": null,
+        "diff_lines": null,
+        "lines": null
+      },
+      "environment": "local",
+      "exit_code": 0,
+      "failed": 0,
+      "finished_at": "2026-08-26T06:10:36.041886Z",
+      "id": "EVD-tests-002",
+      "kind": "tests",
+      "mutation": null,
+      "passed": 1,
+      "produced_by": "aisdlc.orchestration.executor",
+      "report_uri": "evidence/logs/TASK-002-r1.log",
+      "skipped": 0,
+      "started_at": "2026-08-26T06:10:35.944761Z",
+      "status": "complete"
+    },
+    {
+      "command": "python3 -m unittest -q tests.test_priority.PriorityCliTest",
+      "commit_sha": "13b2d3b2623e966958bdd3837e7fe2df3df9ab14",
+      "coverage": {
+        "branches": null,
+        "diff_lines": null,
+        "lines": null
+      },
+      "environment": "local",
+      "exit_code": 0,
+      "failed": 0,
+      "finished_at": "2026-08-26T06:10:36.101433Z",
+      "id": "EVD-tests-003",
+      "kind": "tests",
+      "mutation": null,
+      "passed": 1,
+      "produced_by": "aisdlc.orchestration.executor",
+      "report_uri": "evidence/logs/TASK-003-r1.log",
+      "skipped": 0,
+      "started_at": "2026-08-26T06:10:36.026664Z",
+      "status": "complete"
+    },
+    {
+      "command": "python3 -m unittest -q",
+      "commit_sha": "e0c1044694586b6ae9696ffb7eb8979293a1ce18",
+      "coverage": {
+        "branches": null,
+        "diff_lines": null,
+        "lines": null
+      },
+      "environment": "local",
+      "exit_code": 0,
+      "failed": 0,
+      "finished_at": "2026-08-26T06:10:36.980772Z",
+      "id": "EVD-tests-004",
+      "kind": "tests",
+      "mutation": null,
+      "passed": 1,
+      "produced_by": "aisdlc.orchestration.executor",
+      "report_uri": "evidence/logs/TASK-004-r1.log",
+      "skipped": 0,
+      "started_at": "2026-08-26T06:10:36.548548Z",
+      "status": "complete"
+    }
+  ]
+}

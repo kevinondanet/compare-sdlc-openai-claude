@@ -1,0 +1,45 @@
+{
+  "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+  "critical_open": 0,
+  "environment": "local",
+  "finished_at": "2026-08-26T06:10:41.534574Z",
+  "high_open": 0,
+  "id": "EVD-security-001",
+  "kind": "security",
+  "manifest_drift": false,
+  "produced_by": "aisdlc.security.supply_chain/0.1.0",
+  "provenance_present": true,
+  "pyrit": null,
+  "report_uri": "ci-artifacts",
+  "safety_regression": null,
+  "sast": {
+    "critical": 0,
+    "high": 0,
+    "low": 0,
+    "medium": 0,
+    "ran": true,
+    "report_uri": "ruff.sarif",
+    "tool": "ruff"
+  },
+  "sbom_present": true,
+  "sca": {
+    "critical": 0,
+    "high": 0,
+    "low": 0,
+    "medium": 0,
+    "ran": true,
+    "report_uri": null,
+    "tool": "dependency-review"
+  },
+  "secrets": {
+    "critical": 0,
+    "high": 0,
+    "low": 0,
+    "medium": 0,
+    "ran": true,
+    "report_uri": "gitleaks.json",
+    "tool": "gitleaks"
+  },
+  "started_at": "2026-08-26T06:10:41.534574Z",
+  "status": "complete"
+}

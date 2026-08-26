@@ -1,0 +1,274 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+import os
+from collections.abc import MutableSequence
+from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
+from azure.storage.blob.aio import BlobClient as AsyncBlobClient
+from azure.storage.blob.aio import ContainerClient as AsyncContainerClient
+from unit.mocks import get_image_message_piece, get_sample_conversations
+
+from pyrit.models import Message, MessagePiece, flatten_to_message_pieces
+from pyrit.prompt_target import AzureBlobStorageTarget
+
+
+@pytest.fixture
+def sample_entries() -> MutableSequence[MessagePiece]:
+    conversations = get_sample_conversations()
+    return flatten_to_message_pieces(conversations)
+
+
+@pytest.fixture
+def azure_blob_storage_target(patch_central_database):
+    return AzureBlobStorageTarget(
+        container_url="https://test.blob.core.windows.net/test",
+        sas_token="valid_sas_token",
+    )
+
+
+def test_initialization_with_required_parameters(azure_blob_storage_target: AzureBlobStorageTarget):
+    assert azure_blob_storage_target._container_url == "https://test.blob.core.windows.net/test"
+    assert azure_blob_storage_target._client_async is None
+    assert azure_blob_storage_target._sas_token == "valid_sas_token"
+
+
+def test_supported_auth_modes_includes_identity():
+    """Blob advertises identity-based auth (DefaultAzureCredential) alongside api_key."""
+    assert AzureBlobStorageTarget.supported_auth_modes == ("api_key", "identity")
+
+
+def test_initialization_with_required_parameters_from_env():
+    os.environ[AzureBlobStorageTarget.AZURE_STORAGE_CONTAINER_ENVIRONMENT_VARIABLE] = (
+        "https://test.blob.core.windows.net/test"
+    )
+    os.environ[AzureBlobStorageTarget.SAS_TOKEN_ENVIRONMENT_VARIABLE] = "valid_sas_token"
+    abs_target = AzureBlobStorageTarget()
+    assert abs_target._container_url == os.environ[AzureBlobStorageTarget.AZURE_STORAGE_CONTAINER_ENVIRONMENT_VARIABLE]
+    assert abs_target._sas_token is None
+
+
+@patch.dict(
+    "os.environ",
+    {
+        AzureBlobStorageTarget.AZURE_STORAGE_CONTAINER_ENVIRONMENT_VARIABLE: "",
+    },
+)
+def test_initialization_with_no_container_url_raises():
+    os.environ[AzureBlobStorageTarget.AZURE_STORAGE_CONTAINER_ENVIRONMENT_VARIABLE] = ""
+    with pytest.raises(ValueError):
+        AzureBlobStorageTarget()
+
+
+@patch("azure.storage.blob.aio.ContainerClient.upload_blob")
+async def test_azure_blob_storage_validate_request_length(
+    mock_upload_async,
+    azure_blob_storage_target: AzureBlobStorageTarget,
+):
+    mock_upload_async.return_value = None
+    request = Message(
+        message_pieces=[
+            MessagePiece(role="user", conversation_id="123", original_value="test1"),
+            MessagePiece(role="user", conversation_id="123", original_value="test2"),
+        ]
+    )
+    with pytest.raises(
+        ValueError,
+        match="This target only supports a single message piece.*If your target does support this, set the"
+        " custom_configuration parameter accordingly",
+    ):
+        await azure_blob_storage_target.send_prompt_async(message=request)
+
+
+@patch("azure.storage.blob.aio.ContainerClient.upload_blob")
+async def test_azure_blob_storage_validate_prompt_type(
+    mock_upload_async,
+    azure_blob_storage_target: AzureBlobStorageTarget,
+):
+    mock_upload_async.return_value = None
+    request = Message(message_pieces=[get_image_message_piece()])
+    with pytest.raises(
+        ValueError,
+        match="This target supports only the following data types.*If your target does support this, set the"
+        " custom_configuration parameter accordingly",
+    ):
+        await azure_blob_storage_target.send_prompt_async(message=request)
+
+
+@patch("azure.storage.blob.aio.ContainerClient.upload_blob")
+async def test_azure_blob_storage_validate_prev_convs(
+    mock_upload_async,
+    azure_blob_storage_target: AzureBlobStorageTarget,
+    sample_entries: MutableSequence[MessagePiece],
+):
+    mock_upload_async.return_value = None
+    message_piece = sample_entries[0]
+    azure_blob_storage_target._memory.add_message_to_memory(request=Message(message_pieces=[message_piece]))
+    request = Message(message_pieces=[message_piece])
+
+    with pytest.raises(
+        ValueError,
+        match="This target only supports a single turn conversation.*If your target does support this, set the"
+        " custom_configuration parameter accordingly",
+    ):
+        await azure_blob_storage_target.send_prompt_async(message=request)
+
+
+@patch.object(AzureBlobStorageTarget, "_create_container_client_async", new_callable=AsyncMock)
+@patch.object(AsyncBlobClient, "upload_blob", new_callable=AsyncMock)
+@patch.object(AsyncContainerClient, "get_blob_client", new_callable=MagicMock)
+async def test_send_prompt_async(
+    mock_get_blob_client,
+    mock_upload_blob,
+    mock_create_client,
+    azure_blob_storage_target: AzureBlobStorageTarget,
+    sample_entries: MutableSequence[MessagePiece],
+):
+    mock_blob_client = AsyncMock()
+    mock_get_blob_client.return_value = mock_blob_client
+
+    mock_blob_client.upload_blob = mock_upload_blob
+    mock_upload_blob.return_value = None
+
+    azure_blob_storage_target._client_async = AsyncContainerClient.from_container_url(
+        container_url=azure_blob_storage_target._container_url, credential="mocked_sas_token"
+    )
+
+    message_piece = sample_entries[0]
+    message_piece.converted_value = "Test content"
+    request = Message(message_pieces=[message_piece])
+
+    response = await azure_blob_storage_target.send_prompt_async(message=request)
+
+    assert len(response) == 1
+    assert response
+    blob_url = response[0].get_value()
+    assert azure_blob_storage_target._container_url in blob_url
+    assert blob_url.endswith(".txt")
+    mock_upload_blob.assert_awaited_once()
+
+
+async def test_create_container_client_uses_sas_token(azure_blob_storage_target: AzureBlobStorageTarget):
+    container_url, _ = azure_blob_storage_target._parse_url()
+
+    with patch.object(AsyncContainerClient, "from_container_url", return_value=AsyncMock()) as mock_from_container_url:
+        await azure_blob_storage_target._create_container_client_async()
+
+    mock_from_container_url.assert_called_once_with(container_url=container_url, credential="valid_sas_token")
+    assert azure_blob_storage_target._credential is None
+
+
+def test_parse_url_raises_for_url_without_container(patch_central_database):
+    target = AzureBlobStorageTarget(
+        container_url="https://test.blob.core.windows.net",
+        sas_token="valid_sas_token",
+    )
+
+    with pytest.raises(ValueError, match="expected a container name"):
+        target._parse_url()
+
+
+@patch.dict("os.environ", {AzureBlobStorageTarget.SAS_TOKEN_ENVIRONMENT_VARIABLE: ""})
+async def test_create_container_client_uses_default_credential_when_no_sas_token(patch_central_database):
+    target = AzureBlobStorageTarget(container_url="https://test.blob.core.windows.net/test")
+
+    mock_container_client = AsyncMock()
+    mock_credential = AsyncMock()
+
+    with (
+        patch(
+            "pyrit.prompt_target.azure_blob_storage_target.DefaultAzureCredential", return_value=mock_credential
+        ) as mock_credential_cls,
+        patch(
+            "pyrit.prompt_target.azure_blob_storage_target.AsyncContainerClient", return_value=mock_container_client
+        ) as mock_container_cls,
+    ):
+        await target._create_container_client_async()
+
+    mock_credential_cls.assert_called_once()
+    mock_container_cls.assert_called_once_with(
+        account_url="https://test.blob.core.windows.net",
+        container_name="test",
+        credential=mock_credential,
+    )
+    assert target._client_async is mock_container_client
+    assert target._credential is mock_credential
+
+
+async def test_close_client_async_closes_credential_and_client(azure_blob_storage_target: AzureBlobStorageTarget):
+    mock_client = AsyncMock()
+    mock_credential = AsyncMock()
+    azure_blob_storage_target._client_async = mock_client
+    azure_blob_storage_target._credential = mock_credential
+
+    await azure_blob_storage_target._close_client_async()
+
+    mock_client.close.assert_awaited_once()
+    mock_credential.close.assert_awaited_once()
+    assert azure_blob_storage_target._client_async is None
+    assert azure_blob_storage_target._credential is None
+
+
+async def test_upload_blob_async_closes_client_and_credential(azure_blob_storage_target: AzureBlobStorageTarget):
+    mock_client = AsyncMock()
+    mock_client.get_blob_client = MagicMock(return_value=AsyncMock())
+    mock_credential = AsyncMock()
+
+    async def _set_client() -> None:
+        azure_blob_storage_target._client_async = mock_client
+        azure_blob_storage_target._credential = mock_credential
+
+    with patch.object(AzureBlobStorageTarget, "_create_container_client_async", side_effect=_set_client):
+        await azure_blob_storage_target._upload_blob_async(
+            file_name="test.txt", data=b"hello", content_type="text/plain"
+        )
+
+    mock_client.close.assert_awaited_once()
+    mock_credential.close.assert_awaited_once()
+    assert azure_blob_storage_target._client_async is None
+    assert azure_blob_storage_target._credential is None
+
+
+async def test_upload_blob_async_raises_when_client_async_none(azure_blob_storage_target: AzureBlobStorageTarget):
+    """Guard at line 169: _client_async is None after _create_container_client_async still leaves it None."""
+    azure_blob_storage_target._client_async = None
+    with patch.object(AzureBlobStorageTarget, "_create_container_client_async", new_callable=AsyncMock):
+        # After the mock _create_container_client_async, _client_async remains None
+        with patch.object(AzureBlobStorageTarget, "_parse_url", return_value=("container", "")):
+            with pytest.raises(RuntimeError, match="Blob storage client not initialized"):
+                await azure_blob_storage_target._upload_blob_async(
+                    file_name="test.txt", data=b"hello", content_type="text/plain"
+                )
+
+
+@pytest.mark.parametrize(
+    "file_name",
+    ["../../admin/stolen.txt", "sub/dir/file.txt", "..", ".", "dir\\file.txt", "/abs.txt"],
+)
+def test_sanitize_file_name_rejects_path_traversal(file_name):
+    """Caller-supplied file_name with path components must be rejected (CWE-22 hardening)."""
+    with pytest.raises(ValueError, match="bare filename"):
+        AzureBlobStorageTarget._sanitize_file_name(file_name)
+
+
+def test_sanitize_file_name_allows_bare_name():
+    """A plain leaf file name passes through unchanged."""
+    assert AzureBlobStorageTarget._sanitize_file_name("results.txt") == "results.txt"
+
+
+async def test_send_prompt_async_rejects_traversal_file_name(
+    azure_blob_storage_target: AzureBlobStorageTarget,
+    sample_entries: MutableSequence[MessagePiece],
+):
+    """A traversal file_name in prompt metadata is refused before any upload."""
+    message_piece = sample_entries[0]
+    message_piece.converted_value = "Test content"
+    message_piece.prompt_metadata = {"file_name": "../../admin/stolen.txt"}
+    request = Message(message_pieces=[message_piece])
+
+    with patch.object(AzureBlobStorageTarget, "_upload_blob_async", new_callable=AsyncMock) as mock_upload:
+        with pytest.raises(ValueError, match="bare filename"):
+            await azure_blob_storage_target.send_prompt_async(message=request)
+
+    mock_upload.assert_not_called()

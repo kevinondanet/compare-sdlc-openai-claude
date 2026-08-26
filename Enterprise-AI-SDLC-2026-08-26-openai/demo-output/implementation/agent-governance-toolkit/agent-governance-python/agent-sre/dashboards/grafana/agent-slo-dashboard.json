@@ -1,0 +1,412 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Dedicated SLO health dashboard — error budgets, burn rates, ring transitions, and PagerDuty breach timeline for AI agents",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [
+    {
+      "asDropdown": false,
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Agent SRE Overview",
+      "tooltip": "Back to the main SRE overview dashboard",
+      "type": "link",
+      "url": "/d/agent-sre-overview"
+    }
+  ],
+  "panels": [
+    {
+      "title": "SLO Status Overview",
+      "description": "Current SLO health status per SLO (0=healthy, 1=warning, 2=critical, 3=exhausted)",
+      "type": "stat",
+      "id": 1,
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_sre_slo_status{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}",
+          "legendFormat": "{{slo}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "HEALTHY", "color": "green" },
+                "1": { "text": "WARNING", "color": "yellow" },
+                "2": { "text": "CRITICAL", "color": "orange" },
+                "3": { "text": "EXHAUSTED", "color": "red" },
+                "-1": { "text": "UNKNOWN", "color": "gray" }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 1, "color": "yellow" },
+              { "value": 2, "color": "orange" },
+              { "value": 3, "color": "red" }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "none",
+        "textMode": "auto"
+      }
+    },
+    {
+      "title": "Error Budget Remaining",
+      "description": "Remaining error budget as a percentage per SLO",
+      "type": "gauge",
+      "id": 2,
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_sre_slo_budget_remaining{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}",
+          "legendFormat": "{{slo}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "min": 0,
+          "max": 1,
+          "unit": "percentunit",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": null, "color": "red" },
+              { "value": 0.1, "color": "orange" },
+              { "value": 0.5, "color": "yellow" },
+              { "value": 0.8, "color": "green" }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": true
+      }
+    },
+    {
+      "title": "Active Burn Rate",
+      "description": "Current error budget burn rate (>1 means consuming faster than planned)",
+      "type": "stat",
+      "id": 3,
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_sre_slo_burn_rate{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}",
+          "legendFormat": "{{slo}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 2, "color": "yellow" },
+              { "value": 10, "color": "red" }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "area",
+        "textMode": "auto"
+      }
+    },
+    {
+      "title": "Burn Rate Over Time",
+      "description": "Error budget burn rate with 5m and 1h windows",
+      "type": "timeseries",
+      "id": 4,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_sre_slo_burn_rate{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}",
+          "legendFormat": "{{slo}} — current",
+          "refId": "A"
+        },
+        {
+          "expr": "avg_over_time(agent_sre_slo_burn_rate{slo=~\"$slo_name\"}[1h])",
+          "legendFormat": "{{slo}} — 1h avg",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 15,
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "auto"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 2, "color": "yellow" },
+              { "value": 10, "color": "red" }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Budget Consumption Rate",
+      "description": "Rate of change of error budget remaining",
+      "type": "timeseries",
+      "id": 5,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 6 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "deriv(agent_sre_slo_budget_remaining{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}[5m])",
+          "legendFormat": "{{slo}} — consumption/s",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 20,
+            "lineWidth": 2
+          },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Ring Transitions",
+      "description": "Rate of hypervisor ring transitions per 5-minute window",
+      "type": "timeseries",
+      "id": 6,
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "rate(agent_hypervisor_ring_transitions_total{agent_did=~\"$agent_id\"}[5m])",
+          "legendFormat": "{{event_type}} — {{agent_did}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops",
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "fillOpacity": 10,
+            "lineWidth": 2,
+            "pointSize": 5,
+            "showPoints": "auto"
+          },
+          "color": { "mode": "palette-classic" }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Ring Breaches",
+      "description": "Total ring breach events detected",
+      "type": "stat",
+      "id": 7,
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_hypervisor_ring_breaches_total{agent_did=~\"$agent_id\"}",
+          "legendFormat": "{{agent_did}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "value": null, "color": "green" },
+              { "value": 1, "color": "orange" },
+              { "value": 5, "color": "red" }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "colorMode": "background",
+        "graphMode": "area",
+        "textMode": "auto"
+      }
+    },
+    {
+      "title": "SLO Breach Alerts Timeline",
+      "description": "Annotation overlay of PagerDuty incidents triggered by SLO breaches",
+      "type": "timeseries",
+      "id": 8,
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "changes(agent_sre_slo_status{slo=~\"$slo_name\"}[5m])",
+          "legendFormat": "{{slo}} status changes",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": {
+            "drawStyle": "bars",
+            "fillOpacity": 50,
+            "lineWidth": 1
+          },
+          "color": { "mode": "fixed", "fixedColor": "red" }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "title": "Per-Agent SLO Compliance",
+      "description": "Table view of SLO status grouped by agent",
+      "type": "table",
+      "id": 9,
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 22 },
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "agent_sre_slo_status{slo=~\"$slo_name\", agent_id=~\"$agent_id\"}",
+          "legendFormat": "",
+          "refId": "A",
+          "format": "table",
+          "instant": true
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "HEALTHY", "color": "green" },
+                "1": { "text": "WARNING", "color": "yellow" },
+                "2": { "text": "CRITICAL", "color": "orange" },
+                "3": { "text": "EXHAUSTED", "color": "red" },
+                "-1": { "text": "UNKNOWN", "color": "gray" }
+              }
+            }
+          ]
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [{ "displayName": "Value", "desc": true }]
+      }
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["agent-sre", "slo", "ai-agents", "observability", "error-budget", "burn-rate"],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "Prometheus", "value": "Prometheus" },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Data Source",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(agent_sre_slo_status, slo)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "SLO Name",
+        "multi": true,
+        "name": "slo_name",
+        "options": [],
+        "query": "label_values(agent_sre_slo_status, slo)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(agent_sre_slo_status, agent_id)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Agent ID",
+        "multi": true,
+        "name": "agent_id",
+        "options": [],
+        "query": "label_values(agent_sre_slo_status, agent_id)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-3h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Agent SLO Dashboard",
+  "uid": "agent-slo-dashboard",
+  "version": 1,
+  "refresh": "15s"
+}

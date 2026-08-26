@@ -1,0 +1,21 @@
+[
+  {
+    "change_type": "added", "manifest": "requirements.txt", "ecosystem": "pip", "name": "requests", "version": "2.25.0", "package_url": "pkg:pypi/requests@2.25.0",
+    "vulnerabilities": [
+      {"severity": "critical", "advisory_ghsa_id": "GHSA-j8r2-6x86-q33q", "advisory_summary": "Unintended leak of Proxy-Authorization header", "advisory_url": "https://github.com/advisories/GHSA-j8r2-6x86-q33q", "first_patched_version": "2.31.0"},
+      {"severity": "moderate", "advisory_ghsa_id": "GHSA-9wx4-h78v-vm56", "advisory_summary": "Session verify bypass", "advisory_url": "https://github.com/advisories/GHSA-9wx4-h78v-vm56"}
+    ]
+  },
+  {
+    "change_type": "added", "manifest": "requirements.txt", "ecosystem": "pip", "name": "pyyaml", "version": "5.3", "package_url": "pkg:pypi/pyyaml@5.3",
+    "vulnerabilities": [
+      {"severity": "high", "advisory_ghsa_id": "GHSA-8q59-q68h-6hv4", "advisory_summary": "Arbitrary code execution via full_load", "advisory_url": "https://github.com/advisories/GHSA-8q59-q68h-6hv4"}
+    ]
+  },
+  {
+    "change_type": "removed", "manifest": "requirements.txt", "ecosystem": "pip", "name": "urllib3", "version": "1.24",
+    "vulnerabilities": [
+      {"severity": "critical", "advisory_ghsa_id": "GHSA-removed-0000", "advisory_summary": "should be ignored (removed dependency)"}
+    ]
+  }
+]

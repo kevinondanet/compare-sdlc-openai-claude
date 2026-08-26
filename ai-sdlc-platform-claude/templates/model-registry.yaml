@@ -1,0 +1,224 @@
+# AI-SDLC model registry (consumed by aisdlc.control_plane.registry.ModelRegistry).
+#
+# Prices are USD per 1,000,000 tokens: price_in_per_1m (uncached prompt), price_out_per_1m
+# (completion), price_cached_per_1m (prompt tokens served from cache),
+# price_cache_write_per_1m (prompt tokens written to cache; defaults to input price).
+#
+# Entries with `price_configurable: true` carry PLACEHOLDER prices that operators MUST
+# review and set for their own contracts/deployments (self-hosted open-weights models in
+# particular have no list price). Anthropic first-party rates below are list prices at
+# the time of writing and should be verified against https://www.anthropic.com/pricing.
+#
+# `family` is the model lineage. G3 independent review requires a model from a *different*
+# family than the implementer (routing tier `independent_review`).
+#
+# `default_tier` maps the model onto the routing tiers low / standard / high.
+# `approved_use_cases` lists the agent roles (ARCHITECTURE.md §6) the model may serve;
+# "*" approves every role.
+version: 1
+pricing_note: >-
+  Anthropic prices are list prices per 1M tokens. OpenAI and open-weights prices are
+  placeholders (price_configurable: true) - set them for your account/deployment.
+
+models:
+  # ---------------------------------------------------------------- Anthropic (family: claude)
+  - provider: anthropic
+    model: claude-fable-5
+    version: "5"
+    family: claude
+    capabilities: [code, reasoning, tools, vision, long_context, agentic, security_review]
+    context_limit: 1000000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 10.00
+    price_out_per_1m: 50.00
+    price_cached_per_1m: 1.00
+    price_cache_write_per_1m: 12.50
+    approved_use_cases: [planner, plan_checker, implementer, reviewer, security, escalation]
+    default_tier: high
+    latency_class: slow
+    typical_latency_ms: 12000
+    notes: Most capable; reserve for critical/escalation work. Thinking always on.
+
+  - provider: anthropic
+    model: claude-opus-5
+    version: "5"
+    family: claude
+    capabilities: [code, reasoning, tools, vision, long_context, agentic, security_review]
+    context_limit: 1000000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 5.00
+    price_out_per_1m: 25.00
+    price_cached_per_1m: 0.50
+    price_cache_write_per_1m: 6.25
+    approved_use_cases: [planner, plan_checker, implementer, reviewer, security, escalation]
+    default_tier: high
+    latency_class: medium
+    typical_latency_ms: 6000
+
+  - provider: anthropic
+    model: claude-sonnet-5
+    version: "5"
+    family: claude
+    capabilities: [code, reasoning, tools, vision, long_context, agentic]
+    context_limit: 1000000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 2.00
+    price_out_per_1m: 10.00
+    price_cached_per_1m: 0.20
+    price_cache_write_per_1m: 2.50
+    approved_use_cases: [planner, plan_checker, implementer, reviewer, verifier, uat, security]
+    default_tier: standard
+    latency_class: medium
+    typical_latency_ms: 3000
+
+  - provider: anthropic
+    model: claude-haiku-4-5-20251001
+    version: "20251001"
+    family: claude
+    capabilities: [code, tools, vision, fast]
+    context_limit: 200000
+    max_output_tokens: 64000
+    tool_support: true
+    price_in_per_1m: 1.00
+    price_out_per_1m: 5.00
+    price_cached_per_1m: 0.10
+    price_cache_write_per_1m: 1.25
+    approved_use_cases: [verifier, uat, implementer, plan_checker]
+    default_tier: low
+    latency_class: fast
+    typical_latency_ms: 900
+
+  # ---------------------------------------------------------------- OpenAI (family: gpt)
+  - provider: openai
+    model: gpt-5
+    version: "2025-08"
+    family: gpt
+    capabilities: [code, reasoning, tools, vision, long_context, agentic, security_review]
+    context_limit: 400000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 1.25
+    price_out_per_1m: 10.00
+    price_cached_per_1m: 0.125
+    price_configurable: true
+    approved_use_cases: [planner, plan_checker, implementer, reviewer, security, escalation]
+    default_tier: high
+    latency_class: medium
+    typical_latency_ms: 7000
+    notes: PLACEHOLDER pricing - configure for your account.
+
+  - provider: openai
+    model: gpt-5-mini
+    version: "2025-08"
+    family: gpt
+    capabilities: [code, reasoning, tools, vision, long_context]
+    context_limit: 400000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 0.25
+    price_out_per_1m: 2.00
+    price_cached_per_1m: 0.025
+    price_configurable: true
+    approved_use_cases: [plan_checker, implementer, reviewer, verifier, uat]
+    default_tier: standard
+    latency_class: medium
+    typical_latency_ms: 3500
+    notes: PLACEHOLDER pricing - configure for your account.
+
+  - provider: openai
+    model: gpt-5-nano
+    version: "2025-08"
+    family: gpt
+    capabilities: [code, tools, fast]
+    context_limit: 400000
+    max_output_tokens: 128000
+    tool_support: true
+    price_in_per_1m: 0.05
+    price_out_per_1m: 0.40
+    price_cached_per_1m: 0.005
+    price_configurable: true
+    approved_use_cases: [verifier, uat]
+    default_tier: low
+    latency_class: fast
+    typical_latency_ms: 1200
+    notes: PLACEHOLDER pricing - configure for your account.
+
+  # ---------------------------------------------------------------- Open weights (self-hosted)
+  - provider: meta
+    model: llama-4-maverick
+    version: "2025-04"
+    family: llama
+    capabilities: [code, reasoning, tools, vision, long_context]
+    context_limit: 1000000
+    max_output_tokens: 32000
+    tool_support: true
+    price_in_per_1m: 0.20
+    price_out_per_1m: 0.60
+    price_cached_per_1m: 0.20
+    price_configurable: true
+    open_weights: true
+    approved_use_cases: [reviewer, verifier, uat, implementer, security]
+    default_tier: standard
+    latency_class: medium
+    typical_latency_ms: 4000
+    notes: PLACEHOLDER pricing - self-hosted or hosted-inference rate; configure.
+
+  - provider: meta
+    model: llama-4-scout
+    version: "2025-04"
+    family: llama
+    capabilities: [code, tools, vision, long_context, fast]
+    context_limit: 10000000
+    max_output_tokens: 32000
+    tool_support: true
+    price_in_per_1m: 0.10
+    price_out_per_1m: 0.30
+    price_cached_per_1m: 0.10
+    price_configurable: true
+    open_weights: true
+    approved_use_cases: [verifier, uat]
+    default_tier: low
+    latency_class: fast
+    typical_latency_ms: 1500
+    notes: PLACEHOLDER pricing - self-hosted or hosted-inference rate; configure.
+
+  - provider: mistral
+    model: mistral-large-3
+    version: "2025-12"
+    family: mistral
+    capabilities: [code, reasoning, tools, long_context]
+    context_limit: 256000
+    max_output_tokens: 32000
+    tool_support: true
+    price_in_per_1m: 0.50
+    price_out_per_1m: 1.50
+    price_cached_per_1m: 0.50
+    price_configurable: true
+    open_weights: true
+    approved_use_cases: [reviewer, implementer, verifier, security]
+    default_tier: standard
+    latency_class: medium
+    typical_latency_ms: 4000
+    notes: PLACEHOLDER pricing - self-hosted or hosted-inference rate; configure.
+
+  - provider: alibaba
+    model: qwen3-coder-480b
+    version: "2025-07"
+    family: qwen
+    capabilities: [code, reasoning, tools, long_context, agentic]
+    context_limit: 256000
+    max_output_tokens: 65000
+    tool_support: true
+    price_in_per_1m: 0.40
+    price_out_per_1m: 1.60
+    price_cached_per_1m: 0.40
+    price_configurable: true
+    open_weights: true
+    approved_use_cases: [implementer, reviewer, verifier]
+    default_tier: standard
+    latency_class: medium
+    typical_latency_ms: 4500
+    notes: PLACEHOLDER pricing - self-hosted or hosted-inference rate; configure.

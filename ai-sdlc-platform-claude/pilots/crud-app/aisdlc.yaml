@@ -1,0 +1,17 @@
+# Pilot 1 — a small internal CRUD application (standard risk).
+name: tickets
+languages: [python]
+frameworks: []
+architecture_style: modular_monolith
+risk_classification:
+  default: standard
+  rules:
+    - {pattern: "tickets/*", risk_class: standard}
+    - {pattern: "docs/*", risk_class: docs_only}
+test_commands:
+  unit: python3 -m unittest -q
+  coverage: python3 -m coverage run --branch --source=tickets -m unittest -q
+  lint: null
+  types: null
+critical_modules: []
+overrides: {}

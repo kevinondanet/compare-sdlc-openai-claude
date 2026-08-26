@@ -1,0 +1,117 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+"""
+Prompt targets for PyRIT.
+
+Target implementations for interacting with different services and APIs,
+for example sending prompts or transferring content (uploads).
+"""
+
+import importlib
+from typing import TYPE_CHECKING
+
+from pyrit.prompt_target.azure_blob_storage_target import AzureBlobStorageTarget
+from pyrit.prompt_target.azure_ml_chat_target import AzureMLChatTarget
+from pyrit.prompt_target.common.conversation_normalization_pipeline import ConversationNormalizationPipeline
+from pyrit.prompt_target.common.discover_target_capabilities import (
+    discover_target_capabilities_async,
+)
+from pyrit.prompt_target.common.prompt_target import PromptTarget
+from pyrit.prompt_target.common.realtime_audio import ServerVadConfig
+from pyrit.prompt_target.common.target_capabilities import (
+    CapabilityHandlingPolicy,
+    CapabilityName,
+    TargetCapabilities,
+    UnsupportedCapabilityBehavior,
+    get_known_capabilities,
+)
+from pyrit.prompt_target.common.target_configuration import TargetConfiguration
+from pyrit.prompt_target.common.target_requirements import CHAT_TARGET_REQUIREMENTS, TargetRequirements
+from pyrit.prompt_target.common.utils import limit_requests_per_minute
+from pyrit.prompt_target.gandalf_target import GandalfLevel, GandalfTarget
+from pyrit.prompt_target.http_target.http_target import HTTPTarget
+from pyrit.prompt_target.http_target.http_target_callback_functions import (
+    get_http_target_json_response_callback_function,
+    get_http_target_regex_matching_callback_function,
+)
+from pyrit.prompt_target.http_target.httpx_api_target import HTTPXAPITarget
+from pyrit.prompt_target.litellm_chat_target import LiteLLMChatTarget
+from pyrit.prompt_target.openai.openai_chat_audio_config import OpenAIChatAudioConfig
+from pyrit.prompt_target.openai.openai_chat_target import OpenAIChatTarget
+from pyrit.prompt_target.openai.openai_completion_target import OpenAICompletionTarget
+from pyrit.prompt_target.openai.openai_image_target import OpenAIImageTarget
+from pyrit.prompt_target.openai.openai_realtime_target import RealtimeTarget
+from pyrit.prompt_target.openai.openai_response_target import OpenAIResponseTarget
+from pyrit.prompt_target.openai.openai_target import OpenAITarget
+from pyrit.prompt_target.openai.openai_tts_target import OpenAITTSTarget
+from pyrit.prompt_target.openai.openai_video_target import OpenAIVideoTarget
+from pyrit.prompt_target.playwright_copilot_target import CopilotType, PlaywrightCopilotTarget
+from pyrit.prompt_target.playwright_target import PlaywrightTarget
+from pyrit.prompt_target.prompt_shield_target import PromptShieldTarget
+from pyrit.prompt_target.round_robin_target import RoundRobinTarget
+from pyrit.prompt_target.text_target import TextTarget
+from pyrit.prompt_target.websocket_copilot_target import WebSocketCopilotTarget
+from pyrit.prompt_target.websocket_target import WebsocketTarget
+
+if TYPE_CHECKING:
+    from pyrit.prompt_target.hugging_face.hugging_face_chat_target import HuggingFaceChatTarget
+
+# Keep optional inference targets lazy so package imports do not load their
+# target-specific runtime modules.
+_LAZY_IMPORTS: dict[str, str] = {
+    "HuggingFaceChatTarget": "pyrit.prompt_target.hugging_face.hugging_face_chat_target",
+}
+
+
+def __getattr__(name: str) -> object:
+    if name in _LAZY_IMPORTS:
+        module = importlib.import_module(_LAZY_IMPORTS[name])
+        attr = getattr(module, name)
+        globals()[name] = attr
+        return attr
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
+__all__ = [
+    "AzureBlobStorageTarget",
+    "AzureMLChatTarget",
+    "CapabilityName",
+    "CapabilityHandlingPolicy",
+    "CHAT_TARGET_REQUIREMENTS",
+    "CopilotType",
+    "ConversationNormalizationPipeline",
+    "GandalfLevel",
+    "GandalfTarget",
+    "get_http_target_json_response_callback_function",
+    "get_http_target_regex_matching_callback_function",
+    "HTTPTarget",
+    "HTTPXAPITarget",
+    "HuggingFaceChatTarget",
+    "limit_requests_per_minute",
+    "LiteLLMChatTarget",
+    "OpenAICompletionTarget",
+    "OpenAIChatAudioConfig",
+    "OpenAIChatTarget",
+    "OpenAIImageTarget",
+    "OpenAIResponseTarget",
+    "OpenAIVideoTarget",
+    "OpenAITTSTarget",
+    "OpenAITarget",
+    "PlaywrightTarget",
+    "PlaywrightCopilotTarget",
+    "PromptShieldTarget",
+    "PromptTarget",
+    "RealtimeTarget",
+    "ServerVadConfig",
+    "RoundRobinTarget",
+    "TargetCapabilities",
+    "TargetConfiguration",
+    "TargetRequirements",
+    "UnsupportedCapabilityBehavior",
+    "TextTarget",
+    "WebsocketTarget",
+    "discover_target_capabilities_async",
+    "get_known_capabilities",
+    "WebSocketCopilotTarget",
+]

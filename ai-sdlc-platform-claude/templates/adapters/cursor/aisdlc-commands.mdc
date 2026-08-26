@@ -1,0 +1,9 @@
+---
+description: Briefs for each aisdlc workflow command (use when running an aisdlc step)
+globs:
+alwaysApply: false
+---
+
+# Command briefs
+
+$command_briefs

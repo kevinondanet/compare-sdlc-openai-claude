@@ -1,0 +1,16 @@
+# Keep SHA-pinned actions and dependencies current (pins are bumped by pull request, never
+# by hand). Copy to .github/dependabot.yml in the consuming repository.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

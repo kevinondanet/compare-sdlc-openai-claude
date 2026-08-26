@@ -1,0 +1,5 @@
+[
+  {"Description": "AWS Access Key", "StartLine": 3, "EndLine": 3, "File": "config/settings.py", "RuleID": "aws-access-token", "Fingerprint": "config/settings.py:aws-access-token:3", "Secret": "REDACTED"},
+  {"Description": "Generic API Key", "StartLine": 10, "EndLine": 10, "File": "src/client.py", "RuleID": "generic-api-key", "Fingerprint": "src/client.py:generic-api-key:10", "Secret": "REDACTED"},
+  {"Description": "Slack token", "StartLine": 2, "EndLine": 2, "File": "notes.txt", "RuleID": "slack-access-token", "Fingerprint": "notes.txt:slack-access-token:2", "Secret": "REDACTED"}
+]

@@ -1,0 +1,206 @@
+[
+  {
+    "command": "python3 -m unittest -q tests.test_priority.PriorityFieldTest",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:37.235999Z",
+    "id": "EVD-tests-005",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 1,
+    "produced_by": "aisdlc.orchestration.executor:post-merge",
+    "report_uri": "evidence/logs/TASK-001-merged.log",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:37.172911Z",
+    "status": "complete"
+  },
+  {
+    "command": "python3 -m unittest -q tests.test_priority.PrioritySortTest",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:37.323790Z",
+    "id": "EVD-tests-006",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 1,
+    "produced_by": "aisdlc.orchestration.executor:post-merge",
+    "report_uri": "evidence/logs/TASK-002-merged.log",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:37.237803Z",
+    "status": "complete"
+  },
+  {
+    "command": "python3 -m unittest -q tests.test_priority.PriorityCliTest",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:37.396677Z",
+    "id": "EVD-tests-007",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 1,
+    "produced_by": "aisdlc.orchestration.executor:post-merge",
+    "report_uri": "evidence/logs/TASK-003-merged.log",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:37.325923Z",
+    "status": "complete"
+  },
+  {
+    "command": "python3 -m unittest -q",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:37.846897Z",
+    "id": "EVD-tests-008",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 1,
+    "produced_by": "aisdlc.orchestration.executor:post-merge",
+    "report_uri": "evidence/logs/TASK-004-merged.log",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:37.398835Z",
+    "status": "complete"
+  },
+  {
+    "command": "sh -c '/Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m coverage run --branch --source=tickets -m unittest -q tests.test_service tests.test_priority && /Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m coverage json -q -o coverage.json'",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": 88.24,
+      "diff_lines": 100.0,
+      "lines": 92.55
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:38.367526Z",
+    "id": "EVD-tests-009",
+    "kind": "tests",
+    "mutation": {
+      "excluded": [],
+      "scope": [
+        "tickets/service.py"
+      ],
+      "score": 0.95
+    },
+    "passed": 0,
+    "produced_by": "aisdlc.testing.evidence/0.1.0",
+    "report_uri": "coverage.json",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:38.033760Z",
+    "status": "complete"
+  },
+  {
+    "command": "/Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m unittest -q tests.test_integration",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:40.719415Z",
+    "id": "EVD-tests-010",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 0,
+    "produced_by": "aisdlc.testing.evidence/0.1.0",
+    "report_uri": "tests/test_integration.py",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:40.569317Z",
+    "status": "complete"
+  },
+  {
+    "command": "/Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m unittest -q tests.test_contract",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:40.856253Z",
+    "id": "EVD-tests-011",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 0,
+    "produced_by": "aisdlc.testing.evidence/0.1.0",
+    "report_uri": "tests/test_contract.py",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:40.766668Z",
+    "status": "complete"
+  },
+  {
+    "command": "/Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m unittest -q tests.test_e2e",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:41.318594Z",
+    "id": "EVD-tests-012",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 0,
+    "produced_by": "aisdlc.testing.evidence/0.1.0",
+    "report_uri": "tests/test_e2e.py",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:40.899738Z",
+    "status": "complete"
+  },
+  {
+    "command": "/Users/kevinburrowes/Documents/core-frameworks/ai-sdlc-platform/.venv/bin/python -m unittest -q tests.test_architecture",
+    "commit_sha": "1b8480de6ff67e4e72b3050c654a8aac347165a4",
+    "coverage": {
+      "branches": null,
+      "diff_lines": null,
+      "lines": null
+    },
+    "environment": "local",
+    "exit_code": 0,
+    "failed": 0,
+    "finished_at": "2026-08-26T06:10:41.414941Z",
+    "id": "EVD-tests-013",
+    "kind": "tests",
+    "mutation": null,
+    "passed": 0,
+    "produced_by": "aisdlc.testing.evidence/0.1.0",
+    "report_uri": "tests/test_architecture.py",
+    "skipped": 0,
+    "started_at": "2026-08-26T06:10:41.356938Z",
+    "status": "complete"
+  }
+]

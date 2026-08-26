@@ -1,0 +1,1 @@
+{"compatibility":"backward","interface_id":"IFC-001","kind":"tool","name":"send_email","requirement_ids":["REQ-001"],"specification":{"required":["to","body"]},"version":"1"}

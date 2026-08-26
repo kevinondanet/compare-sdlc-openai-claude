@@ -1,0 +1,51 @@
+{
+  "scenarios": 8,
+  "scenarios_with_tests": 8,
+  "acceptance_criteria_with_evidence": 100.0,
+  "critical_journeys": [
+    "REQ-001",
+    "REQ-002",
+    "REQ-003",
+    "REQ-004"
+  ],
+  "critical_journeys_with_e2e": [
+    "REQ-001",
+    "REQ-002",
+    "REQ-003",
+    "REQ-004"
+  ],
+  "critical_journeys_e2e": 100.0,
+  "missing": [],
+  "by_scenario": {
+    "SCN-001-01": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-001-02": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-002-01": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-003-01": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-003-02": [
+      "test_priority.py"
+    ],
+    "SCN-004-01": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-004-02": [
+      "test_e2e.py",
+      "test_priority.py"
+    ],
+    "SCN-005-01": [
+      "test_priority.py"
+    ]
+  }
+}

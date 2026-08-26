@@ -1,0 +1,9 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [{"name": "dist/example_app-1.0.0-py3-none-any.whl", "digest": {"sha256": "6f1a3c1b2e5d4a7c8b9e0f1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e"}}],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": {
+    "buildDefinition": {"buildType": "https://actions.github.io/buildtypes/workflow/v1", "externalParameters": {"workflow": {"ref": "refs/heads/main", "repository": "https://github.com/example/app", "path": ".github/workflows/aisdlc-ci.yml"}}},
+    "runDetails": {"builder": {"id": "https://github.com/actions/runner/github-hosted"}, "metadata": {"invocationId": "https://github.com/example/app/actions/runs/1/attempts/1"}}
+  }
+}

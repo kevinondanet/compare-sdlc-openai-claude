@@ -1,0 +1,12 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "https://example.com/vex/2024-001",
+  "author": "security@example.com",
+  "timestamp": "2024-06-01T00:00:00Z",
+  "version": 1,
+  "statements": [
+    {"@id": "vex-1", "vulnerability": {"name": "GHSA-j8r2-6x86-q33q"}, "products": [{"@id": "pkg:pypi/requests@2.25.0"}], "status": "not_affected", "justification": "vulnerable_code_not_in_execute_path"},
+    {"@id": "vex-2", "vulnerability": {"name": "GHSA-8q59-q68h-6hv4"}, "products": [{"@id": "pkg:pypi/pyyaml@5.3"}], "status": "under_investigation"},
+    {"@id": "vex-3", "vulnerability": {"name": "GHSA-9wx4-h78v-vm56"}, "status": "affected"}
+  ]
+}

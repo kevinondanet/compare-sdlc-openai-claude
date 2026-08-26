@@ -1,0 +1,140 @@
+{
+  "approvals": [
+    {
+      "approved_at": "2026-08-26T06:10:52.408314Z",
+      "approver": "office-manager@example.com",
+      "note": "the form works for the Friday run",
+      "role": "owner"
+    }
+  ],
+  "change_id": "CHG-lunch-order-form",
+  "commit_sha": "7c88cdb32977dba570e2ffa29fe3429d2adb695e",
+  "files": [
+    {
+      "path": "evidence/cost.json",
+      "sha256": "68b9cee1ba5d6c6a616d962f8ba6921e7fe13f9b09b2b5e021160aa58fb89a30",
+      "size": 502
+    },
+    {
+      "path": "evidence/portfolio.json",
+      "sha256": "7ed89270fad1e67347683db50b50c9153b646475af208c29e61ed7e5f5473ed9",
+      "size": 3866
+    },
+    {
+      "path": "evidence/reviews.json",
+      "sha256": "55474e4f80a26eb95d36cb2245e952b93bc0ecd10d877a92136e3bcbfa4bb733",
+      "size": 692
+    },
+    {
+      "path": "evidence/security.json",
+      "sha256": "3a632e5434062f8dc132d9066f34e8662aeac7a94175021f3cc878b4e29113a7",
+      "size": 976
+    },
+    {
+      "path": "evidence/tests.json",
+      "sha256": "34222303d5475c3f31f9aa494144f017c751ab0ae2d2c3bbb2f080fd3a1a888c",
+      "size": 7521
+    },
+    {
+      "path": "approvals.json",
+      "sha256": "398631478b6bf5913f337d9b4434fbea49884a55ebb43e74c3917626cdae8434",
+      "size": 177
+    }
+  ],
+  "fingerprint": "49f7a0fb8d5213fedaed29bd3bf5773ce6a200bf8961d7d4e46b5d0493471ef9",
+  "gate_results": [
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G0",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [],
+      "gate": "G1",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015",
+        "EVD-tests-016",
+        "EVD-tests-017"
+      ],
+      "gate": "G2",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-reviews-007"
+      ],
+      "gate": "G3",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-security-001"
+      ],
+      "gate": "G4",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001"
+      ],
+      "gate": "G5",
+      "passed": true,
+      "reasons": []
+    },
+    {
+      "depth": "standard",
+      "evidence_ids": [
+        "EVD-cost-001",
+        "EVD-reviews-007",
+        "EVD-security-001",
+        "EVD-tests-007",
+        "EVD-tests-008",
+        "EVD-tests-009",
+        "EVD-tests-010",
+        "EVD-tests-011",
+        "EVD-tests-012",
+        "EVD-tests-013",
+        "EVD-tests-014",
+        "EVD-tests-015",
+        "EVD-tests-016",
+        "EVD-tests-017"
+      ],
+      "gate": "G6",
+      "passed": true,
+      "reasons": []
+    }
+  ],
+  "overall": true,
+  "produced_at": "2026-08-26T06:10:52.460383Z",
+  "signatures": [
+    {
+      "algorithm": "hmac-sha256",
+      "signed_at": "2026-08-26T06:10:52.520137Z",
+      "signer": "aisdlc",
+      "value": "1cb9a8b4a381eed991d8de1c69b28300373e18c77148f03eec33b0d06b8c35f9"
+    }
+  ],
+  "version": 1
+}

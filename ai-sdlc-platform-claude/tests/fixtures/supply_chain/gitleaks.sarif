@@ -1,0 +1,12 @@
+{
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {"driver": {"name": "gitleaks", "semanticVersion": "8.21.2", "rules": [{"id": "aws-access-token"}]}},
+      "results": [
+        {"ruleId": "aws-access-token", "level": "error", "message": {"text": "aws-access-token has detected secret"}, "locations": [{"physicalLocation": {"artifactLocation": {"uri": "config/settings.py"}, "region": {"startLine": 3}}}]},
+        {"ruleId": "aws-access-token", "level": "error", "message": {"text": "aws-access-token has detected secret"}, "locations": [{"physicalLocation": {"artifactLocation": {"uri": ".env.example"}, "region": {"startLine": 1}}}]}
+      ]
+    }
+  ]
+}

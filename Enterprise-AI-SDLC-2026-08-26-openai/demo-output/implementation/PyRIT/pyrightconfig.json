@@ -1,0 +1,15 @@
+{
+    "include": [
+      "pyrit"
+    ],
+    "exclude": [
+      "**/.git",
+      "**/__pycache__",
+      "**/build",
+      "**/dist",
+      ".venv",
+      "pyrit.egg-info",
+      ".pytest_cache"
+    ],
+    "reportMissingImports": true
+  }

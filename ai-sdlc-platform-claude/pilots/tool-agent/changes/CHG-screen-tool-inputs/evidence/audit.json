@@ -1,0 +1,16 @@
+{
+  "approvals": 0,
+  "commit_sha": "780aea0dc4fdc519b3ec832690e8e6281a98bf7c",
+  "denied_calls": 16,
+  "entries": 113,
+  "environment": "local",
+  "finished_at": "2026-08-26T06:15:33.445392Z",
+  "id": "EVD-audit-001",
+  "integrity_ok": true,
+  "kind": "audit",
+  "privileged_calls": 21,
+  "produced_by": "aisdlc.governance.audit/0.1.0",
+  "report_uri": "changes/CHG-screen-tool-inputs/evidence/audit-entries.json",
+  "started_at": "2026-08-26T06:15:31.582705Z",
+  "status": "complete"
+}

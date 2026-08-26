@@ -1,0 +1,212 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+import uuid
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pyrit.prompt_target import PromptTarget
+
+from pyrit.models import (
+    ComponentIdentifier,
+    Condition,
+    Message,
+    MessagePiece,
+    Score,
+    ScoringExpectation,
+)
+from pyrit.score.float_scale.float_scale_score_aggregator import FloatScaleAggregatorFunc, FloatScaleScoreAggregator
+from pyrit.score.float_scale.float_scale_scorer import FloatScaleScorer
+from pyrit.score.score_utils import ORIGINAL_FLOAT_VALUE_KEY
+from pyrit.score.scorer_prompt_validator import ScorerPromptValidator
+from pyrit.score.true_false.true_false_scorer import TrueFalseScorer
+
+
+class FloatScaleThresholdScorer(TrueFalseScorer):
+    """A scorer that applies a threshold to a float scale score to make it a true/false score."""
+
+    ORIGINAL_FLOAT_VALUE_KEY: str = ORIGINAL_FLOAT_VALUE_KEY
+
+    def __init__(
+        self,
+        *,
+        scorer: FloatScaleScorer,
+        threshold: float,
+        float_scale_aggregator: FloatScaleAggregatorFunc = FloatScaleScoreAggregator.MAX,
+    ) -> None:
+        """
+        Initialize the FloatScaleThresholdScorer.
+
+        Args:
+            scorer (FloatScaleScorer): The underlying float scale scorer to use.
+            threshold (float): The threshold value between 0 and 1. Scores >= threshold are True, otherwise False.
+            float_scale_aggregator (FloatScaleAggregatorFunc): The aggregator function to use for combining
+                multiple float scale scores. Defaults to FloatScaleScoreAggregator.MAX.
+
+        Raises:
+            ValueError: If the threshold is not between 0 and 1.
+        """
+        self._scorer = scorer
+        self._threshold = threshold
+        self._float_scale_aggregator = float_scale_aggregator
+
+        # Validation is used by sub-scorers
+        super().__init__(validator=ScorerPromptValidator())
+
+        if threshold <= 0 or threshold > 1:
+            raise ValueError("The threshold must be between 0 and 1")
+
+    @property
+    def threshold(self) -> float:
+        """The threshold value used for score comparison."""
+        return self._threshold
+
+    def _build_identifier(self) -> ComponentIdentifier:
+        """
+        Build the identifier for this scorer.
+
+        Returns:
+            ComponentIdentifier: The identifier for this scorer.
+        """
+        return self._create_identifier(
+            params={
+                "threshold": self._threshold,
+                "float_scale_aggregator": self._float_scale_aggregator.__name__,  # type: ignore[ty:unresolved-attribute]
+            },
+            score_aggregator=self._score_aggregator.__name__,  # type: ignore[ty:unresolved-attribute]
+            sub_scorers=[self._scorer.get_identifier()],
+        )
+
+    def get_chat_target(self) -> "PromptTarget | None":
+        """
+        Delegate to the wrapped scorer.
+
+        Returns:
+            PromptTarget | None: The chat target from the wrapped scorer.
+        """
+        return self._scorer.get_chat_target()
+
+    def matched_conditions(self) -> frozenset[type[Condition]]:
+        """
+        Report what the wrapped scorer matches.
+
+        Returns:
+            frozenset[type[Condition]]: The condition types the wrapped scorer routes.
+        """
+        return self._scorer.matched_conditions()
+
+    def required_conditions(self) -> frozenset[type[Condition]]:
+        """
+        Report what the wrapped scorer requires.
+
+        Returns:
+            frozenset[type[Condition]]: The required condition types.
+        """
+        return self._scorer.required_conditions()
+
+    async def _score_prepared_message_async(
+        self,
+        *,
+        message: Message,
+        expectation: ScoringExpectation | None,
+    ) -> list[Score]:
+        """
+        Scores the piece using the underlying float-scale scorer and thresholds the resulting score.
+
+        Args:
+            message (Message): The message to score.
+            expectation (ScoringExpectation | None): What the wrapped scorer should look for.
+
+        Returns:
+            list[Score]: A list containing a single true/false Score object based on the threshold comparison.
+        """
+        scores = await self._scorer._score_nested_message_async(
+            message=message,
+            expectation=expectation,
+        )
+        objective = expectation.objective if expectation else None
+
+        # Aggregator handles 0-many scores and returns exactly one result (or raises if configured)
+        aggregate_results = self._float_scale_aggregator(scores)
+        aggregate_score = aggregate_results[0]
+        aggregate_value = aggregate_score.value
+
+        # Calculate threshold result
+        threshold_result = aggregate_value >= self._threshold
+        if aggregate_value > self._threshold:
+            comparison_symbol = ">"
+        elif aggregate_value < self._threshold:
+            comparison_symbol = "<"
+        else:
+            comparison_symbol = "="
+
+        scorer_type = self._scorer.get_identifier().class_name
+
+        # If we have scores, modify the first one; otherwise create a new score
+        if scores:
+            score = scores[0]
+            score.score_type = "true_false"
+            score.score_value = str(threshold_result)
+            # Carry the aggregate's category, metadata and rationale rather than the first
+            # constituent score's. The threshold decision is made on the aggregate, so
+            # describing it with scores[0] mislabels the result whenever the wrapped scorer
+            # returns more than one score (e.g. AzureContentFilterScorer, one per harm
+            # category): the value would say True while the category, rationale and metadata
+            # described a different, possibly zero-valued, category.
+            score.score_rationale = (
+                f"based on {scorer_type}\n"
+                f"Normalized scale score: {aggregate_value} {comparison_symbol} threshold {self._threshold}\n"
+                f"Rationale for scale score: {aggregate_score.rationale}"
+            )
+            score.score_value_description = aggregate_score.description
+            score.score_category = aggregate_score.category
+            score.id = uuid.uuid4()
+            score.scorer_class_identifier = self.get_identifier()
+            # Store the original float value in metadata for granular comparison
+            score.score_metadata = {
+                **aggregate_score.metadata,
+                ORIGINAL_FLOAT_VALUE_KEY: aggregate_value,
+            }
+        else:
+            # Create new score from aggregator result (all pieces were filtered out)
+            # Use the first message piece's id if available, otherwise generate a new UUID
+            piece_id = (
+                message.message_pieces[0].id
+                if message.message_pieces and message.message_pieces[0].id
+                else uuid.uuid4()
+            )
+
+            score = Score(
+                score_type="true_false",
+                score_value=str(threshold_result),
+                score_value_description=aggregate_score.description,
+                score_rationale=(
+                    f"based on {scorer_type}\n"
+                    f"Normalized scale score: {aggregate_value} {comparison_symbol} threshold {self._threshold}\n"
+                    f"{aggregate_score.rationale}"
+                ),
+                score_category=aggregate_score.category,
+                # Include original float value in metadata for granular comparison
+                score_metadata={
+                    **aggregate_score.metadata,
+                    ORIGINAL_FLOAT_VALUE_KEY: aggregate_value,
+                },
+                scorer_class_identifier=self.get_identifier(),
+                message_piece_id=piece_id,
+                objective=objective,
+            )
+
+        return [score]
+
+    async def _score_piece_async(self, message_piece: MessagePiece, *, objective: str | None = None) -> list[Score]:
+        """
+        Float Scale scorers do not support piecewise scoring.
+
+        Args:
+            message_piece (MessagePiece): Unused.
+            objective (str | None): Unused.
+
+        Raises:
+            NotImplementedError: Always, since composite scoring operates at the response level.
+        """
+        raise NotImplementedError("FloatScaleThresholdScorer does not support piecewise scoring.")

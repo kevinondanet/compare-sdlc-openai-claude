@@ -1,0 +1,17 @@
+# Pilot 2 — business-user-led generated application (form -> table), standard risk.
+name: lunch-orders
+languages: [python]
+frameworks: []
+architecture_style: modular_monolith
+risk_classification:
+  default: standard
+  rules:
+    - {pattern: "lowcode/*", risk_class: standard}
+    - {pattern: "forms/*", risk_class: standard}
+test_commands:
+  unit: python3 -m unittest -q
+  coverage: python3 -m coverage run --branch --source=lowcode -m unittest -q
+  lint: null
+  types: null
+critical_modules: []
+overrides: {}

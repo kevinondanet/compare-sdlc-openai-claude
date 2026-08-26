@@ -1,0 +1,39 @@
+# AI-SDLC project configuration. Describes the project and may narrow org policy.
+# These values are the platform defaults (aisdlc.policy.project_config.ProjectConfig()).
+name: project
+languages: [python]
+frameworks: []
+architecture_style: modular_monolith
+
+risk_classification:
+  default: standard
+  # Path globs (fnmatch) -> risk class; the highest matching class wins.
+  rules: []
+  # rules:
+  #   - {pattern: "src/*/auth/*", risk_class: high}
+  #   - {pattern: "docs/*", risk_class: docs_only}
+  #   - {pattern: "src/*/agents/*", risk_class: ai_agent}
+
+test_commands:
+  unit: pytest -q
+  lint: ruff check .
+  types: mypy
+  build: null
+  integration: null
+  e2e: null
+  coverage: null
+  mutation: null
+
+# Modules held to security_baselines.coverage.critical_modules.
+critical_modules: []
+
+# Narrowing overrides. Every key is optional and may only TIGHTEN the org value:
+#   numbers: budgets/limits/thresholds down, coverage/mutation/min_signatures up
+#   booleans: require_* may not become false; escalation_allowed may not become true
+#   lists: required_gates may only grow; allowlist may only shrink
+#   ranks: gate depth / tool tier behaviour may only get stricter; role tier caps only lower
+overrides: {}
+# overrides:
+#   cost_limits: {max_agent_turns: 20, budgets: {per_change_usd: 20.0}}
+#   security_baselines: {coverage: {lines: 85.0}, ambiguity_threshold: 0.10}
+#   models: {allowlist: ["anthropic/claude-*"]}

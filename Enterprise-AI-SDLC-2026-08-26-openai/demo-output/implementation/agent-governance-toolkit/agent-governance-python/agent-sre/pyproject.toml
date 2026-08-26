@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=84.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agent_sre"
+version = "5.0.0"
+description = "Deprecated. Previously published as agent-sre. Install agent-governance-toolkit-cli instead."
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Microsoft Corporation", email = "agentgovtoolkit@microsoft.com"},
+]
+dependencies = ["agent-governance-toolkit-cli>=5.0.0,<6.0"]
+
+# The published wheel is a dep-only deprecation stub (see [project] above), but
+# the agent_sre source tree under src/ (and tests/) is still exercised in CI via
+# `pip install -e ".[dev]"`. PR #2794 stripped [project.optional-dependencies]
+# entirely, which silently turned `.[dev]` into a no-op and left the test suite
+# unable to import croniter/fastapi/opentelemetry/pydantic/pyyaml — every
+# `pytest tests/` run failed at COLLECTION (ModuleNotFoundError). The `dev` extra
+# below restores exactly the test/dev dependencies the suite needs to collect and
+# run. This does NOT change the published runtime dependency surface (the
+# [project] stub still ships only the -cli redirect). Mirrors the agent-os fix
+# (#2969 + #2972).
+[project.optional-dependencies]
+# Test/dev dependencies required for `pytest tests/` to collect and run. The
+# entries beyond the pre-#2794 set (pydantic, pyyaml, croniter, opentelemetry,
+# fastapi) were previously satisfied by the package's runtime `dependencies` or
+# the `api` extra, which the stub no longer carries; they are imported directly by
+# the test suite at collection time, so the dev bundle must list them.
+dev = [
+    "pytest>=9.1.1,<10.0",
+    "pytest-cov>=7.1.0,<8.0",
+    "pytest-asyncio>=1.4.0,<2.0",
+    "ruff>=0.16.2,<1.0",
+    "mypy>=2.3.0,<3.0",
+    "pydantic>=2.13.4,<3.0",
+    "pyyaml>=6.0.3,<7.0",
+    "croniter>=2.0,<7.0",
+    "opentelemetry-api>=1.44.0,<2.0",
+    "opentelemetry-sdk>=1.44.0,<2.0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.44.0,<2.0",
+    "fastapi>=0.141.1,<1.0",
+    "uvicorn>=0.52.1,<1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/microsoft/agent-governance-toolkit"
+"Migration Guide" = "https://github.com/microsoft/agent-governance-toolkit/blob/main/docs/package-consolidation/MIGRATION.md"
+
+# Dep-only deprecation stub: the published wheel ships NO source, it only
+# redirects to agent-governance-toolkit-cli (see [project].dependencies). The
+# `agent_sre` top-level package is owned solely by -cli, which force-includes
+# ../agent-sre/src/agent_sre. Shipping it here too would put the same top-level
+# import path in two distributions and cause an order/version-dependent
+# "Frankenstein" install. Hatchling's bypass-selection cannot express this
+# here: its default heuristic runs first and would re-ship src/agent_sre
+# because the distribution name matches the tree. An explicit setuptools
+# `packages = []` (the agentmesh-primitives stub pattern) builds a wheel with
+# no package of its own. The src/ tree stays in-repo for CI (which imports it
+# via the editable -cli install) and as the source of truth force-included by
+# -cli.
+[tool.setuptools]
+packages = []
+
+# ============================================================================
+# Ruff - Fast Python Linter & Formatter
+#
+# The published wheel is a dep-only deprecation stub (see [project] above), but
+# the agent_sre source tree under src/ is still linted in CI. These dev-tooling
+# sections were dropped during the package consolidation in #2794; without the
+# per-file-ignores, ruff reports F401 on re-export __init__.py files across the
+# package (adapters, alerts, tracing, ...). Restoring them keeps CI green.
+# ============================================================================
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "TCH"]
+ignore = [
+    "E501",   # line too long
+    "E741",   # ambiguous variable name
+    "UP035",  # deprecated typing imports (need py310 compat)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401", "E402"]
+"tests/*" = ["F401", "E402"]
+"src/agent_sre/integrations/*" = ["E402"]
+
+# ============================================================================
+# Pytest
+# ============================================================================
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "slow: long-running tests (skip with -m 'not slow')",
+    "integration: end-to-end integration tests",
+]

@@ -1,0 +1,18 @@
+{
+  "kind": "audit",
+  "integrity_ok": true,
+  "privileged_calls": 4,
+  "denied_calls": 1,
+  "approved_calls": 0,
+  "exported_at": "2024-06-01T00:00:00+00:00",
+  "entries": [
+    {"entry_id": "1", "timestamp": "2024-06-01T00:00:01+00:00", "event_type": "session_start", "agent_id": "implementer", "action": "session.start", "resource": null, "outcome": "success", "tier": 0, "data": {"session_id": "s1"}},
+    {"entry_id": "2", "timestamp": "2024-06-01T00:00:02+00:00", "event_type": "tool_invocation", "agent_id": "implementer", "action": "read_file", "resource": "src/app/main.py", "outcome": "allowed", "tier": 0, "data": {"tool_name": "Read", "tier": 0}},
+    {"entry_id": "3", "timestamp": "2024-06-01T00:00:03+00:00", "event_type": "tool_invocation", "agent_id": "implementer", "action": "write_file", "resource": "src/app/main.py", "outcome": "allowed", "tier": 1, "data": {"tool_name": "Write", "tier": 1, "in_worktree": true}},
+    {"entry_id": "4", "timestamp": "2024-06-01T00:00:04+00:00", "event_type": "tool_invocation", "agent_id": "implementer", "action": "http_request", "resource": "https://api.github.com/repos/example/app/pulls", "outcome": "allowed", "tier": 3, "data": {"tool_name": "mcp__github__create_pull_request", "tier": 3, "egress_host": "api.github.com"}},
+    {"entry_id": "5", "timestamp": "2024-06-01T00:00:05+00:00", "event_type": "tool_invocation", "agent_id": "implementer", "action": "http_request", "resource": "https://pastebin.com/api/api_post.php", "outcome": "allowed", "tier": 3, "data": {"tool_name": "WebFetch", "tier": 3}},
+    {"entry_id": "6", "timestamp": "2024-06-01T00:00:06+00:00", "event_type": "tool_blocked", "agent_id": "implementer", "action": "shell", "resource": "rm -rf /", "outcome": "denied", "tier": 4, "data": {"tool_name": "Bash", "tier": 4}},
+    {"entry_id": "7", "timestamp": "2024-06-01T00:00:07+00:00", "event_type": "tool_invocation", "agent_id": "implementer", "action": "query", "resource": "postgres://orders-db/orders", "outcome": "allowed", "tier": 2, "data": {"tool_name": "mcp__db__query", "tier": 2, "data_source": "postgres://orders-db/orders"}},
+    {"entry_id": "8", "timestamp": "2024-06-01T00:00:08+00:00", "event_type": "approval_granted", "agent_id": "kevin", "action": "approve", "resource": null, "outcome": "success", "tier": 0, "data": {}}
+  ]
+}

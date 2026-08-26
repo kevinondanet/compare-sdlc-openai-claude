@@ -1,0 +1,192 @@
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT license.
+
+
+import json
+import os
+import uuid
+
+import jsonschema
+import pytest
+
+from pyrit.auth import get_azure_openai_auth
+from pyrit.models import MessagePiece
+from pyrit.prompt_target import OpenAIResponseTarget
+
+_AZURE_KEY_AUTH_DISABLED_REASON = "Azure key-based (local) auth is disabled in our tenant."
+
+
+@pytest.fixture(
+    params=[
+        pytest.param(None, id="entra"),
+        pytest.param(
+            "AZURE_OPENAI_GPT5_KEY",
+            marks=pytest.mark.skip(reason=_AZURE_KEY_AUTH_DISABLED_REASON),
+            id="api-key",
+        ),
+    ]
+)
+def gpt5_args(request: pytest.FixtureRequest) -> dict[str, object]:
+    endpoint_value = os.environ["AZURE_OPENAI_GPT5_RESPONSES_ENDPOINT"]
+    api_key_env: str | None = request.param
+    return {
+        "endpoint": endpoint_value,
+        "model_name": os.getenv("AZURE_OPENAI_GPT5_MODEL"),
+        "api_key": os.environ[api_key_env] if api_key_env else get_azure_openai_auth(endpoint_value),
+    }
+
+
+async def test_openai_responses_gpt5(sqlite_instance, gpt5_args):
+    target = OpenAIResponseTarget(**gpt5_args)
+
+    conv_id = str(uuid.uuid4())
+
+    developer_piece = MessagePiece(
+        role="developer",
+        original_value="You are a helpful assistant.",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+    sqlite_instance.add_message_to_memory(request=developer_piece.to_message())
+
+    user_piece = MessagePiece(
+        role="user",
+        original_value="What is the capital of France?",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+
+    result = await target.send_prompt_async(message=user_piece.to_message())
+    assert result is not None
+    assert len(result) == 1
+    assert len(result[0].message_pieces) == 2
+    assert all(piece.api_role == "assistant" for piece in result[0].message_pieces)
+    assert result[0].get_piece_by_type(data_type="reasoning") is not None
+    text_piece = result[0].get_piece_by_type(data_type="text")
+    assert text_piece is not None
+    # Hope that the model manages to give the correct answer somewhere (GPT-5 really should)
+    assert "Paris" in text_piece.converted_value
+
+
+async def test_openai_responses_gpt5_json_schema(sqlite_instance, gpt5_args):
+    target = OpenAIResponseTarget(**gpt5_args)
+
+    conv_id = str(uuid.uuid4())
+
+    developer_piece = MessagePiece(
+        role="developer",
+        original_value="You are an expert in the lore of cats.",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+    sqlite_instance.add_message_to_memory(request=developer_piece.to_message())
+
+    cat_schema = {
+        "type": "object",
+        "properties": {
+            "name": {"type": "string", "minLength": 12},
+            "age": {"type": "integer", "minimum": 0, "maximum": 20},
+            "fur_rgb": {
+                "type": "array",
+                "items": {"type": "integer", "minimum": 0, "maximum": 255},
+                "minItems": 3,
+                "maxItems": 3,
+            },
+        },
+        "required": ["name", "age", "fur_rgb"],
+        "additionalProperties": False,
+    }
+
+    prompt = "Create a JSON object that describes a mystical cat "
+    prompt += "with the following properties: name, age, fur_rgb."
+
+    user_piece = MessagePiece(
+        role="user",
+        original_value=prompt,
+        original_value_data_type="text",
+        conversation_id=conv_id,
+        prompt_metadata={"response_format": "json", "json_schema": json.dumps(cat_schema)},
+    )
+
+    response = await target.send_prompt_async(message=user_piece.to_message())
+
+    assert len(response) == 1
+    assert len(response[0].message_pieces) == 2
+    assert response[0].get_piece_by_type(data_type="reasoning") is not None
+    response_piece = response[0].get_piece_by_type(data_type="text")
+    assert response_piece is not None
+    assert response_piece.api_role == "assistant"
+    response_json = json.loads(response_piece.converted_value)
+    jsonschema.validate(instance=response_json, schema=cat_schema)
+
+
+async def test_openai_responses_gpt5_json_object(sqlite_instance, gpt5_args):
+    target = OpenAIResponseTarget(**gpt5_args)
+
+    conv_id = str(uuid.uuid4())
+
+    developer_piece = MessagePiece(
+        role="developer",
+        original_value="You are an expert in the lore of cats.",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+
+    sqlite_instance.add_message_to_memory(request=developer_piece.to_message())
+
+    prompt = "Create a JSON object that describes a mystical cat "
+    prompt += "with the following properties: name, age, fur_rgb."
+
+    user_piece = MessagePiece(
+        role="user",
+        original_value=prompt,
+        original_value_data_type="text",
+        conversation_id=conv_id,
+        prompt_metadata={"response_format": "json"},
+    )
+    response = await target.send_prompt_async(message=user_piece.to_message())
+
+    assert len(response) == 1
+    assert len(response[0].message_pieces) == 2
+    assert response[0].get_piece_by_type(data_type="reasoning") is not None
+    response_piece = response[0].get_piece_by_type(data_type="text")
+    assert response_piece is not None
+    assert response_piece.api_role == "assistant"
+    _ = json.loads(response_piece.converted_value)
+    # Can't assert more, since the failure could be due to a bad generation by the model
+
+
+async def test_openai_responses_gpt5_reasoning_effort(sqlite_instance, gpt5_args):
+    target = OpenAIResponseTarget(**gpt5_args, reasoning_effort="low")
+
+    conv_id = str(uuid.uuid4())
+
+    user_piece = MessagePiece(
+        role="user",
+        original_value="What is 2 + 2?",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+
+    result = await target.send_prompt_async(message=user_piece.to_message())
+    assert result is not None
+    assert len(result) == 1
+    assert any(p.converted_value_data_type == "text" for p in result[0].message_pieces)
+
+
+async def test_openai_responses_gpt5_reasoning_summary(sqlite_instance, gpt5_args):
+    target = OpenAIResponseTarget(**gpt5_args, reasoning_effort="low", reasoning_summary="auto")
+
+    conv_id = str(uuid.uuid4())
+
+    user_piece = MessagePiece(
+        role="user",
+        original_value="What is 2 + 2?",
+        original_value_data_type="text",
+        conversation_id=conv_id,
+    )
+
+    result = await target.send_prompt_async(message=user_piece.to_message())
+    assert result is not None
+    assert len(result) == 1
+    assert any(p.converted_value_data_type == "text" for p in result[0].message_pieces)
