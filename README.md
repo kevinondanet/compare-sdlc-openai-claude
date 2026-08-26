@@ -4,8 +4,6 @@ _Review date: August 26, 2026_
 
 ## Executive conclusion
 
-The newly added implementation folder materially improves the OpenAI pack: it is now a runnable, inspectable reference implementation rather than only an evidence snapshot.
-
 **Claude remains the better overall SDLC platform. OpenAI is the better assurance and release-integrity kernel. Neither should be deployed unchanged.**
 
 The strongest production direction is to use Claude as the workflow and developer-experience chassis, then incorporate OpenAI's signed approval, evidence-provenance, issuance, and replay-protection model.
