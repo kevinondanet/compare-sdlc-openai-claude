@@ -2,7 +2,7 @@
 
 ## 100% AI Generated
 - OpenAI Gpt 5.6 Sol: Runtime 5.3 hours
-- Anthropic-Claude: Fable 5: Runtime 3.5 hours 
+- Anthropic: Fable 5: Runtime 3.5 hours 
 
 _Review date: August 26, 2026_
 
