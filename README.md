@@ -1,10 +1,9 @@
 # SDLC Pack Comparison: OpenAI vs. Claude
 _Review date: August 26, 2026_
 
+*Objective:* Make AI-assisted development fast and accessible to developers and non-developers, with cost optimized centrally and decisions driven by agreed benchmarks.
 
-## 100% AI Generated
-- OpenAI Gpt 5.6 Sol: Runtime 5.3 hours
-- Anthropic Fable 5: Runtime 3.5 hours 
+Take the best from these:
 
 | Original folder name           | Canonical GitHub URL                                                                                                            |
 | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
@@ -29,6 +28,21 @@ _Review date: August 26, 2026_
 [8]: https://github.com/bmad-code-org?utm_source=chatgpt.com "BMad Code Org · GitHub"
 [9]: https://github.com/Fission-AI/openspec?utm_source=chatgpt.com "GitHub - Fission-AI/OpenSpec: Spec-driven development (SDD) for AI coding assistants. · GitHub"
 [10]: https://github.com/aws-samples/sample-aidlc-kiro-power?utm_source=chatgpt.com "GitHub - aws-samples/sample-aidlc-kiro-power · GitHub"
+
+
+Where we need the best approach, based on our project data: code quality, code security, test coverage, architecture, cost and performance. Please base your plan using the following SDLC methods. Leveraging PyRIT and the Microsoft Agent Governance Toolkit.
+
+https://microsoft.github.io/agent-governance-toolkit/#start-with-governance-in-2-lines
+
+
+## 100% AI Generated
+- OpenAI Gpt 5.6 Sol: Runtime 5.3 hours
+- Anthropic Fable 5: Runtime 3.5 hours
+
+
+  
+
+
 
 ## Executive conclusion
 
